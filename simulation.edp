@@ -1,20 +1,23 @@
 load "medit"
 include "cube.idp"
 
-// question : où est rho ?
+// question : où est rho et f (gravity à changer) ?
+// question : comment définir la région  sur laquelle intégrer ?
 // question : rotation ?
 // question : adaptmesh3 ?
-//
+// rédaction ?
 
 real e = 0.1;
 real rho = 0.35;
 real h = 0.4;
 real l = 1.7-rho*2;
 real p = 0.5;
+real fz = -5e8;
 
 real E = 2.1e11;
 real sigma = 0.3;
-real gravity = -5e8;
+real g = -9.81;
+real gravity = rho*g;//-5e8;
 
 real mu = E/(2*(1+sigma));
 real lambda = E*sigma/((1+sigma)*(1-2*sigma));
@@ -68,6 +71,7 @@ solve Lame([u1,u2,u3],[v1,v2,v3])=
   - int3d(Th) (gravity*v2)
   + on(7,u1=0,u2=0,u3=0)
   + on(12,u1=0,u2=0,u3=0)
+  - int2d(Th, 1)(fz*v2)
   ;
 real dmax= u1[].max;
 cout << " max deplacement = " << dmax << endl;
