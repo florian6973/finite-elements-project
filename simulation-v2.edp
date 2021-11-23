@@ -1,52 +1,56 @@
 load "medit"
 include "cube.idp"
 
-//ffpdeplot
-// question : où est rho et f (gravity à changer) ?
+// question : comment retourner un tuple simuler déplacement pour faire évolution maillage ?
+// quesiton : càd moitié de la structure ?
+// question : pont pas variable globale
 // question : comment définir la région  sur laquelle intégrer ?
-// question : rotation ?
-// question : adaptmesh3 ?
 // rédaction ?
+// todo commenter code
 
-real rho = 0.35;
+real sqrt2=sqrt(2.);
+macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
+macro div(u1,u2,u3) ( dx(u1)+dy(u2)+dz(u3) ) // EOM
+
+// Géométrie
+real r = 0.35;
 real h = 0.4;
-real l = 1.7-rho*2;
+real l = 1.7-r*2;
 real p = 0.5;
+
+// Grandeurs mécaniques
 real fz = -5e8;
-
 real E = 2.1e11;
-real sigma = 0.3;
+real nu = 0.3;
 real g = -9.81;
+real rho = 7800;
+
+// Grandeurs calculées
 real gravity = rho*g;
+real mu = E/(2*(1+nu));
+real lambda = E*nu/((1+nu)*(1-2*nu));
 
-real mu = E/(2*(1+sigma));
-real lambda = E*sigma/((1+sigma)*(1-2*sigma));
+mesh3 pont = cube(2,2,2); // default
 
-int n = 10;
-
-real[int] xx(10), yy(10);
-real e = 0.1;
-for (int i=1; i<15; i++)
+func mesh build2d(bool show, bool half, real e, int n)
 {
-    e -= 0.003;
-
     border b1(t=1, -1){x=t*l/2; y=e; label=1;};
     border b2(t=-1, 1){x=t*l/2; y=0; label=2;};
 
-    border b3(t=0, pi/2){x=rho*cos(t)+l/2; y=rho*sin(t)+e-rho; label=3;};
-    border b4(t=pi/2, 0){x=(rho-e)*cos(t)+l/2; y=(rho-e)*sin(t)-rho+e; label=4;};
+    border b3(t=0, pi/2){x=r*cos(t)+l/2; y=r*sin(t)+e-r; label=3;};
+    border b4(t=pi/2, 0){x=(r-e)*cos(t)+l/2; y=(r-e)*sin(t)-r+e; label=4;};
 
-    border b5(t=0, 1){x=l/2+rho-e; y=-t*h-rho+e; label=5;};
-    border b6(t=1, 0){x=l/2+rho; y=-t*h-rho+e; label=6;};
-    border b7(t=1, 0){x=l/2+rho-e*t; y=-h-rho+e; label=7;};
+    border b5(t=0, 1){x=l/2+r-e; y=-t*h-r+e; label=5;};
+    border b6(t=1, 0){x=l/2+r; y=-t*h-r+e; label=6;};
+    border b7(t=1, 0){x=l/2+r-e*t; y=-h-r+e; label=7;};
 
 
-    border b8(t=pi/2, 0){x=-(rho*cos(t)+l/2); y=rho*sin(t)+e-rho; label=8;};
-    border b9(t=0, pi/2){x=-((rho-e)*cos(t)+l/2); y=(rho-e)*sin(t)-rho+e; label=9;};
+    border b8(t=pi/2, 0){x=-(r*cos(t)+l/2); y=r*sin(t)+e-r; label=8;};
+    border b9(t=0, pi/2){x=-((r-e)*cos(t)+l/2); y=(r-e)*sin(t)-r+e; label=9;};
 
-    border b10(t=1, 0){x=-(l/2+rho-e); y=-t*h-rho+e; label=10;};
-    border b11(t=0, 1){x=-(l/2+rho); y=-t*h-rho+e; label=11;};
-    border b12(t=0, 1){x=-(l/2+rho-e*t); y=-h-rho+e; label=12;};
+    border b10(t=1, 0){x=-(l/2+r-e); y=-t*h-r+e; label=10;};
+    border b11(t=0, 1){x=-(l/2+r); y=-t*h-r+e; label=11;};
+    border b12(t=0, 1){x=-(l/2+r-e*t); y=-h-r+e; label=12;};
 
     border b13(t=1,0){x=0; y=t*e;label=18;};
 
@@ -55,64 +59,154 @@ for (int i=1; i<15; i++)
     border b15(t=0, 1){x=t*l/2; y=0; label=2;};
     border b16(t=1, 0){x=0; y=t*e; label=8;};
 
-    plot(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n) + b13(n), wait=true);
-
-    bool half = false;
-    mesh test = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
+    mesh pont2d = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
     if (half)
     {
-        test = buildmesh(b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b14(n) + b15(n) + b16(n));
+        pont2d = buildmesh(b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b14(n) + b15(n) + b16(n));
+    }
+    if (show)
+    {        
+        plot(pont2d, wait=true);
     }
 
+    return pont2d;
+}
 
+func mesh3 build3d(mesh pont2d, bool show, int m)
+{
+    mesh3 pontretourne = buildlayers(pont2d, m, zbound=[-p/2,p/2]);  
+    pont = movemesh3(pontretourne, transfo=[x, z, y], orientation=-1);
 
+    if (show)
+    {
+        plot(pont, wait=true);
+    }
 
-    plot(test, wait=true);
-    mesh3 Th0 = buildlayers(test, n/4, zbound=[-p/2,p/2]);  
-    mesh3 Th = movemesh3(Th0, transfo=[x, z, y], orientation=-1); // TODO ne fonctionne pas
-    plot(Th, wait=true);
+    return pont;
+}
 
-    fespace Vh(Th,[P1,P1,P1]); // P1 ou P2 ?
+func real simulerdeplacement(bool show, real e)
+{
+    fespace Vh(pont,[P1,P1,P1]); // P1 ou P2 ?
     Vh [u1,u2,u3], [v1,v2,v3];
-    cout << "lambda,mu,gravity ="<<lambda<< " " << mu << " " << gravity << endl;
-
-    real sqrt2=sqrt(2.);
-    macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
-    macro div(u1,u2,u3) ( dx(u1)+dy(u2)+dz(u3) ) // EOM
     
     solve Lame([u1,u2,u3],[v1,v2,v3])=
-    int3d(Th)(  
+    int3d(pont)(  
             lambda*div(u1,u2,u3)*div(v1,v2,v3)	
-            +2.*mu*( epsilon(u1,u2,u3)'*epsilon(v1,v2,v3) ) //')
+            +2.*mu*( epsilon(u1,u2,u3)'*epsilon(v1,v2,v3) )
             )
-    - int3d(Th) (gravity*v3)
-    + on(7,u1=0,u2=0,u3=0)
-    + on(12,u1=0,u2=0,u3=0)
-    - int2d(Th, 1)(fz*v3)
+    - int3d(pont) (gravity*v3)
+    + on(7,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
+    + on(12,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
+    - int2d(pont, 1)(fz*v3) // condition force surfacique (Neumann)
     ;
-    real dmax= u3[].max;
-    cout << " max deplacement = " << dmax << endl;
-    real coef= 0.1/dmax;
-    int[int] ref2=[1,0,2,0];
-    mesh3 Thm=movemesh3(Th,transfo=[x+u1*coef,y+u2*coef,z+u3*coef],label=ref2);
-    Thm=change(Thm,label=ref2);
-    plot(Th,Thm, wait=1,cmm="e="+e+" coef  amplification = "+coef+"\ndep=" + u3[].max );
-    xx[i-1] = e;
-    yy[i-1] = dmax;
 
-    // mmg
-    // grep "mmg3d(" */*.edp
-    //adaptmesh2d sinon
+    real dmax= u3[].min; // min ou max ?
 
-    //adapter les paramètres du mesh à la main sinon car contrôle la création
-    //test = adaptmesh(test, [u1, u2]);//, ratio=0.9);
-    //n=n+5;
-    //test = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
-    plot([xx, yy], wait=true);
-    {// file for gnuplot
-   ofstream gnu("plot.txt");
-    for (int i = 0; i < n; i++)
-       gnu << xx[i] << " " << yy[i] << endl;
- }
-    //gnuplot, exporter résultats
+    if (show)
+    {        
+        real coef= 0.1/dmax;
+        int[int] ref2=[1,0,2,0];
+        mesh3 pontdeforme=movemesh3(pont,transfo=[x+u1*coef,y+u2*coef,z+u3*coef],label=ref2);
+        //pont=change(pontdeforme,label=ref2);
+        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + u3[].max );
+    }
+
+    return dmax;
 }
+
+func real deplacementmax(bool show, bool half, real e, int n, int m)
+{
+    mesh pont2d = build2d(show, half, e, n);
+    pont = build3d(pont2d, show, m);
+    real dmax = simulerdeplacement(show, e);
+    return dmax;
+}
+
+string s;
+cout << "Tapez g pour tracer le graphe m pour simuler avec la moitie de la maille a pour simuler avec ladaptation du mesh d pour la dichotomie" << endl;
+cin >> s;
+
+int n = 10;
+int m = n/4;
+
+if (s == "g")
+{
+    real e = 0.1;//0.001; pas trop petit pour intéressant
+    real inc = 0.006;
+    real rmax = 0.3; //r;
+    int nb = (rmax-e)/inc + 1;
+    real[int] xx(nb), yy(nb);
+    int i = 0;
+
+    while (e < rmax)
+    {
+        real dmax = deplacementmax(false, false, e, n, m);
+        xx[i] = e;
+        yy[i] = dmax;
+        cout << "e=" << e << endl;
+        e += inc;
+        i += 1;
+    }
+
+    {// file for gnuplot
+        ofstream gnu("plot.txt");
+        for (int i = 0; i < nb; i++)
+           gnu << xx[i] << " " << yy[i] << endl;
+    }
+    plot([xx, yy], wait=true);
+}
+else if (s == "d")
+{
+    real emax = 0.13;
+    real emin = 0.17;
+    real dmax = 0.1;
+    real d = dmax*100;
+    real e = 0;
+    real eps = 0.005;
+
+    while (abs(d-dmax) > eps)
+    {
+        e = (emax+emin)/2;
+        d = abs(deplacementmax(false, false, e, n, m)); 
+        
+        cout << "emin=" << emin << endl;
+        cout << "emax=" << emax << endl;
+        cout << "e=" << e << endl;
+        cout << "d=" << d << endl;
+
+        if (d > dmax)
+        {
+            emax = e;
+        }   
+        else
+        {
+            emin = e;
+        }    
+    }
+}
+else if (s == "a") // todo adaptation manuelle
+{
+    real e = 0.1;   
+    bool show = true;
+
+    //mesh pont2d = build2d(show, half, e, n);
+    //mesh3 pont = build3d(pont2d, show, m);
+    //simulerdeplacement(pont, show);
+
+    //while (true)
+    //{
+        //Vh[int] u = simulerdeplacement(pont, show);
+
+        //pont2d = adaptmesh(pont2d, [u[0], u[1]]);
+        //pont = build3d(pont2d, show, m);
+    //}
+}
+else if (s == "m") // todo adaptation manuelle
+{
+    real e = 0.1;   
+    bool show = true;
+    deplacementmax(show, true, e, n, m);
+}
+// grep "mmg3d(" */*.edp
+//adapter les paramètres du mesh à la main sinon car contrôle la création
