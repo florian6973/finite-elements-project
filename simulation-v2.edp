@@ -1,13 +1,17 @@
 load "medit"
 include "cube.idp"
 
-// question : comment retourner un tuple simuler déplacement pour faire évolution maillage ?
+verbosity = 0;
+
+// question : comment retourner un tuple simuler déplacement pour faire évolution maillage ? OK normalement
 // question : définition de la normale n ? surface 2d ok ?
 // quesiton : càd moitié de la structure ?
-// question : pont pas variable globale
+// question : pont pas variable globale ? NON
 // question : comment définir la région  sur laquelle intégrer ?
 // rédaction ?
 // todo commenter code
+// save img & half structure
+// medit to show labels
 
 real sqrt2=sqrt(2.);
 macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
@@ -32,6 +36,8 @@ real mu = E/(2*(1+nu));
 real lambda = E*nu/((1+nu)*(1-2*nu));
 
 mesh3 pont = cube(2,2,2); // default
+fespace Vh(pont,[P1,P1,P1]); // P1 ou P2 ?
+Vh [u1,u2,u3], [v1,v2,v3];
 
 func mesh build2d(bool show, bool half, real e, int n)
 {
@@ -86,10 +92,9 @@ func mesh3 build3d(mesh pont2d, bool show, int m)
     return pont;
 }
 
-func real simulerdeplacement(bool show, real e)
+func real simulerdeplacement(bool show, real e, int n, int m, bool adapt)
 {
-    fespace Vh(pont,[P1,P1,P1]); // P1 ou P2 ?
-    Vh [u1,u2,u3], [v1,v2,v3];
+    [u1, u2, u3] = [0, 0, 0]; // pour mettre à jour le maillage
     
     solve Lame([u1,u2,u3],[v1,v2,v3])=
     int3d(pont)(  
@@ -110,7 +115,14 @@ func real simulerdeplacement(bool show, real e)
         int[int] ref2=[1,0,2,0];
         mesh3 pontdeforme=movemesh3(pont,transfo=[x+u1*coef,y+u2*coef,z+u3*coef],label=ref2);
         //pont=change(pontdeforme,label=ref2);
-        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax );
+        string geom = " | (n,m)=" + n + "," + m;
+        if (adapt)
+        {
+            geom = " | auto";
+        }
+        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom, ps="plot.ps");
+        //exporter en vtk puis paraview
+        //enregistrer les solutions, u1, U2, u3 et maillage : write to file (ofstream, save mesh)
     }
 
     return dmax;
@@ -120,12 +132,12 @@ func real deplacementmax(bool show, bool half, real e, int n, int m)
 {
     mesh pont2d = build2d(show, half, e, n);
     pont = build3d(pont2d, show, m);
-    real dmax = simulerdeplacement(show, e);
+    real dmax = simulerdeplacement(show, e, n, m, false);
     return dmax;
 }
 
 string s;
-cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m pour simuler avec la moitie de la maille a pour simuler avec ladaptation du mesh d pour la dichotomie" << endl;
+cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m pour simuler avec la moitie de la maille a pour simuler avec ladaptation du mesh d pour la dichotomie b pour adaptation manuelle" << endl;
 cin >> s;
 
 int n = 10;
@@ -159,61 +171,54 @@ if (s == "g")
 }
 else if (s == "d")
 {
-    real emax = 0.13;
-    real emin = 0.17;
-    real dmax = 0.1;
-    real d = dmax*100;
-    real e = 0;
-    real eps = 0.005;
-
-    while (abs(d-dmax) > eps)
-    {
-        e = (emax+emin)/2;
-        d = abs(deplacementmax(false, false, e, n, m)); 
-        
-        cout << "emin=" << emin << endl;
-        cout << "emax=" << emax << endl;
-        cout << "e=" << e << endl;
-        cout << "d=" << d << endl;
-
-        if (d > dmax)
-        {
-            emax = e;
-        }   
-        else
-        {
-            emin = e;
-        }    
-    }
+    cout << "todo" << endl;
 }
 else if (s == "a") // todo adaptation manuelle
 {
     real e = 0.1;   
     bool show = true;
+    bool half = false;
 
-    //mesh pont2d = build2d(show, half, e, n);
-    //mesh3 pont = build3d(pont2d, show, m);
-    //simulerdeplacement(pont, show);
+    cout << "CTRL-C to stop" << endl;
 
-    //while (true)
-    //{
-        //Vh[int] u = simulerdeplacement(pont, show);
+    mesh pont2d = build2d(show, half, e, n);
+    mesh3 pont = build3d(pont2d, show, m);
 
-        //pont2d = adaptmesh(pont2d, [u[0], u[1]]);
-        //pont = build3d(pont2d, show, m);
-    //}
+    while (true)
+    {
+        simulerdeplacement(show, e, n, m, true);
+
+        pont2d = adaptmesh(pont2d, [u1, u2]);
+        if (show)
+        {
+            plot(pont2d, wait=true);
+        }
+        pont = build3d(pont2d, show, m);
+    }
 }
-else if (s == "m") // todo adaptation manuelle
+else if (s == "m")
 {
     real e = 0.1;   
     bool show = true;
     deplacementmax(show, true, e, n, m);
 }
-else if (s == "s") // todo adaptation manuelle
+else if (s == "s")
 {
     real e = 0.155;   
     bool show = true;
     deplacementmax(show, false, e, n, m);
+}
+else if (s == "b")
+{
+    real e = 0.1;   
+    bool show = true;
+    for (int n2 = n; n2 < 40; n2+=5)
+    {
+        for (int m2 = m; m2 < 15; m2+=2)
+        {
+            deplacementmax(show, false, e, n2, m2);
+        }
+    }
 }
 // grep "mmg3d(" */*.edp
 //adapter les paramètres du mesh à la main sinon car contrôle la création
