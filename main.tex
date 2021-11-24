@@ -13,6 +13,7 @@
 \usepackage{lastpage}
 \usepackage{listingsutf8}
 \usepackage{ff++listings}
+\input{includes.tex}
 
 \renewcommand{\footrulewidth}{0.8pt}
 \hypersetup{
@@ -71,11 +72,11 @@
     \section{Formulation variationnelle}
 
     \begin{problem}{1}
-    Mise sous équation
+    Mise sous équation du problème pour pouvoir le résoudre avec les éléments finis.
     \end{problem}
     
-    \begin{solution}    
-    Blabla
+    \begin{solution}   
+        \input{formulation_variationnelle.tex}
     \end{solution}
 
     \section{Résolution à épaisseur fixée}

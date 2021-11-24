@@ -178,7 +178,7 @@ else if (s == "a") // todo adaptation manuelle
     real e = 0.1;   
     bool show = true;
     bool half = false;
-
+    
     cout << "CTRL-C to stop" << endl;
 
     mesh pont2d = build2d(show, half, e, n);

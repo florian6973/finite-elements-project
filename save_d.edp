@@ -1,0 +1,27 @@
+
+    real emax = 0.13;
+    real emin = 0.17;
+    real dmax = 0.1;
+    real d = dmax*100;
+    real e = 0;
+    real eps = 0.005;
+
+    while (abs(d-dmax) > eps)
+    {
+        e = (emax+emin)/2;
+        d = abs(deplacementmax(false, false, e, n, m)); 
+        
+        cout << "emin=" << emin << endl;
+        cout << "emax=" << emax << endl;
+        cout << "e=" << e << endl;
+        cout << "d=" << d << endl;
+
+        if (d > dmax)
+        {
+            emax = e;
+        }   
+        else
+        {
+            emin = e;
+        }    
+    }

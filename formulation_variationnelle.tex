@@ -1,0 +1,72 @@
+On part de la formulation forte. On cherche le déplacement $\vec{u}$, fonction de $\mathbb{R}^3$ dans $\mathbb{R}^3$.
+
+Pour cela, on réalise d'abord un bilan des forces sur le système étudié qui est le pont dans le référentiel terrestre. Le système est à l'équilibre donc $\vec{a} = 0$.
+
+On définit
+
+\begin{equation}
+    \vec{f} = \begin{pmatrix} 0\\ 0\\ f\\\end{pmatrix}
+\end{equation}
+
+et sa valeur est spécifiée dans l'énoncé.
+
+On définit 
+
+\begin{equation}
+    \vec{g} = \begin{pmatrix} 0\\ 0\\ -g\\\end{pmatrix}
+\end{equation}
+
+où $g$ est l'accélération de la pesanteur standard.
+
+On se place en 3D. On définit le domaine $\Omega$ comme l'ensemble du pont (qui est un polygone), et la frontière $\Gamma$ est partitionnée comme selon le schéma.
+
+Le schéma n'est pas à l'échelle.
+
+D'après le cours de mécanique,
+
+\begin{equation}
+    \begin{cases}
+        \lambda = \frac{E}{2(1+\nu)}\\
+        \mu = \frac{\nu E}{(1+\nu)(1-2\nu)}
+    \end{cases}
+\end{equation}
+
+et on cherche donc $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
+
+\begin{equation}\label{fort}
+    \begin{cases}
+      \div \sigma + \rho \vec{g} = 0 \textrm { sur $\Omega$ (bilan local)} \\
+      \sigma = \lambda \Tr (\varepsilon) I + 2 \mu \varepsilon \textrm { (élasticité linéaire)} \\
+      \varepsilon=\frac{\nabla u + \nabla u^T }{2} \textrm { (déformation)} \\
+      \sigma \cdot \vec{n} = \vec{f}\textrm { sur $\Gamma_F$ (condition de Neumann)} \\
+      \sigma \cdot \vec{n} = 0\textrm { sur $\Gamma \backslash (\Gamma_F \cup \Gamma_S) $ (condition de Neumann)} \\
+      \vec{u} = 0 \textrm { sur $\Gamma_S$ (condition de Dirichlet)} \\
+      
+    \end{cases}
+\end{equation}
+
+On a bien les conditions de continuité et de différentiabilité souhaitées. %à prouver, problème un peu différent%
+
+Etant donné que l'on a dans le cours uniquement des formules pour des inconnues scalaires, on va écrire les équations pour chaque coordonnée pour arriver à la formulation variationnelle.
+
+On note $\sigma_i$ la transposée de la $i$-ème ligne du $\sigma$.
+
+Considérons une solution du problème.
+Soit $i \in \{1,2,3\}$.
+Soit $v_i \in \mathcal{C}^1(\bar{\Omega})$.
+% def sigma
+% def v
+La première équation de \eqref{fort} se réécrit 
+$$\div \vec{\sigma_i} + \rho g_i = 0$$
+On multiplie par $v_i$ et on intègre sur $\Omega$ :
+$$\int_\Omega v_i \div \vec{\sigma_i} +  \int_\Omega v_i \rho g_i = 0$$
+
+On réalise une intégration par partie selon la formule de Green, car $\vec{\sigma_i} \in \mathcal{C}^1(\bar{\Omega})^3$ et $v_i \in \mathcal{C}^1(\bar{\Omega})$ :
+
+$$-\int_{\Omega} \vec{\sigma_i} \cdot \grad v_i + \int_{\Gamma} v_i (\vec{\sigma_i} \cdot \vec{n}) + \int_\Omega v_i \rho g_i = 0$$
+
+On injecte les conditions de Neumann dans l'équation. %+conditions de dirichlet 
+
+
+
+    
