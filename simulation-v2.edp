@@ -2,6 +2,7 @@ load "medit"
 include "cube.idp"
 
 // question : comment retourner un tuple simuler déplacement pour faire évolution maillage ?
+// question : définition de la normale n ? surface 2d ok ?
 // quesiton : càd moitié de la structure ?
 // question : pont pas variable globale
 // question : comment définir la région  sur laquelle intégrer ?
