@@ -1,5 +1,41 @@
-
+\usepackage[margin=1in]{geometry} 
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsthm,amssymb,amsfonts, fancyhdr, color, comment, graphicx, environ}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage[shortlabels]{enumitem}
+\usepackage{indentfirst}
+\usepackage{hyperref}
+\usepackage{lastpage}
+\usepackage{listingsutf8}
+\usepackage{ff++listings}
 \usepackage{amsmath}
 \DeclareMathOperator{\Tr}{Tr}
 \usepackage{physics}
 \usepackage{amsfonts}
+\usepackage{float}
+
+\renewcommand{\footrulewidth}{0.8pt}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\pagestyle{fancy}
+
+\newenvironment{problem}[2][Etape]
+    { \begin{mdframed}[backgroundcolor=gray!20] \textbf{#1 #2} \\}
+    {  \end{mdframed}}
+
+\newenvironment{solution}{\textbf{Réponse}}
+
+\lhead{L. Gomes et F. Pollet}
+\rhead{ES Elements finis} 
+\chead{\textbf{Optimisation de l'épaisseur d'un pont}}
+\lfoot{D. Ryckelynck, N. Spillane, P.-H. Tournier}
+\cfoot{Mines Paris}
+\rfoot{\thepage/\pageref*{LastPage}}
