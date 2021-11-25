@@ -12,24 +12,22 @@
     % appendix pour code ?
 
     \section{Présentation du problème}
-    %Intro intro sur des éléments finis, parler de l'utilité d'eux pour les calculs    
-    Une application envisageable pour les calculs avec la méthode des éléments finis est l'optimisation de l'épaisseur d'une structure tridimensionelle, 
+    La méthode des éléments finis est une méthode matématique utilisée par industriels et chercheurs afin de résudre numériquement des équations aux dérivées partielles. Une application envisageable pour les calculs avec la méthode des éléments finis est l'optimisation de l'épaisseur d'une structure tridimensionelle, 
     qui est ainsi l'objectif de ce projet. 
-    La structure tridimensionnelle choisie est un pont pour lequel nous avons cherché à minimiser l'épaisseur du pont
+    La structure tridimensionnelle choisie est un pont pour lequel nous avons cherché à minimiser l'épaisseur
     en respectant une contrainte de déplacement vertical maximal en son centre de $10$ cm malgré l'application d'une force surfacique
     constante sur la surface horizontale supérieure du pont. 
-    La géométrie de ce problème est tridimensionnelle et sa coupe verticale est montré dans la Figure \ref{fig:problem}. %referencier la figure
+    La géométrie de ce problème est tridimensionnelle et sa coupe verticale est montré dans la Figure \ref{fig:problem}.
     \begin{figure}[H]        
     \begin{center}
 	
         \includegraphics[width=12cm]{coupe_2D-schema.JPG}
-        \caption{Schéma du problème}
+        \caption{Schéma de la géométrie du pont. Une force surfacique $f= - 5x10^8 N m^(-2)$ est appliquée à sa surface supérieure. Le déplacement maximale $d$ est montré en bleue, en vert c'est $\gamma$F, surface dans lequelle la force est appliquée et $\gamma$S est la surface inférieure fixe. Le système est qui est soumis à la gravité $g$.}
         \label{fig:problem}
     
 	\end{center}
     \end{figure}
     
-    % mettre la légende: Figure 1 - Coupe verticale de la géométrie du pont. Une force $f= - 5x10^8 N m^(-2)$ est appliquée à sa surface supérieure. Le déplacement maximale $d$ est montré en bleue. Le système est qui est soumis à la gravité $g$. Parler partie conditions limites ici!!!!!!!!!!! 
     La structure est considérée comme homogène avec les extrémités inférieures fixes et une largeur $p = 0,5 m$. 
     
     Les données fournis pour ce système sont :
