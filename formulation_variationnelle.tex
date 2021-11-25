@@ -53,9 +53,11 @@ On note $\sigma_i$ la transposée de la $i$-ème ligne du $\sigma$.
 
 Considérons une solution du problème.
 Soit $i \in \{1,2,3\}$.
-Soit $v_i \in \mathcal{C}^1(\bar{\Omega})$.
+Soit $v_i \in \mathcal{C}^1(\bar{\Omega})$ tel que $v_{i|\Gamma_S} = 0$.
 % def sigma
 % def v
+
+
 La première équation de \eqref{fort} se réécrit 
 $$\div \vec{\sigma_i} + \rho g_i = 0$$
 On multiplie par $v_i$ et on intègre sur $\Omega$ :
@@ -65,8 +67,37 @@ On réalise une intégration par partie selon la formule de Green, car $\vec{\si
 
 $$-\int_{\Omega} \vec{\sigma_i} \cdot \grad v_i + \int_{\Gamma} v_i (\vec{\sigma_i} \cdot \vec{n}) + \int_\Omega v_i \rho g_i = 0$$
 
-On injecte les conditions de Neumann dans l'équation. %+conditions de dirichlet 
+On injecte les conditions de Neumann et de Dirichlet dans l'équation : %+conditions de dirichlet 
+
+\begin{equation}
+    \begin{cases}
+        -\displaystyle\int_{\Omega} \vec{\sigma_i} \cdot \grad v_i + \int_{\Gamma_F} v_i f_i + \int_\Omega v_i \rho g_i = 0\\
+        u_i = 0 \textrm{ sur } \Gamma_S
+    \end{cases}
+\end{equation}
+
+Sommons maintenant les trois équations.
 
 
 
-    
+On définit :
+
+$$
+\epsilon(\vec{x})=
+\begin{pmatrix}
+    \partial_1 x_1\\
+    \partial_2 x_2\\ 
+    \partial_3 x_3\\
+    \frac{1}{\sqrt{2}}(\partial_3 x_2 + \partial_2 x_3)\\
+    \frac{1}{\sqrt{2}}(\partial_3 x_1 + \partial_1 x_3)\\
+    \frac{1}{\sqrt{2}}(\partial_2 x_1 + \partial_1 x_3)\\
+\end{pmatrix}
+$$
+
+On arrive donc au problème suivant : trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
+\begin{equation}
+    \begin{cases}
+        \displaystyle\int_{\Omega} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} v f - \int_\Omega v_i \rho g = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^2(\bar{\Omega})^3\\
+        \vec{u} = 0 \textrm{ sur } \Gamma_S
+    \end{cases}
+\end{equation}

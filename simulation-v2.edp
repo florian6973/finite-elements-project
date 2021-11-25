@@ -1,6 +1,15 @@
 load "medit"
 include "cube.idp"
 
+// à rendre pour le 3 décembre
+// environ 10 - 15 pages
+//compter les figures dans les 10/15 pages, étude en fonction de h 
+// présenter le problème, la formulation variationnelle, quels éléments finis choisis, pourquoi, la taille du maillage
+// le plus simple pour résultat satisfaisant, P2, pas plus de précision mais beaucoup de degré de liberté en plus, pas p1 si dérivée deux fois pour thermique
+// entre p2 et p1 raffiné, mêm
+// pas code dans le rapport, à envoyer si besoin à part
+
+
 verbosity = 0;
 
 // question : comment retourner un tuple simuler déplacement pour faire évolution maillage ? OK normalement
@@ -12,6 +21,8 @@ verbosity = 0;
 // todo commenter code
 // save img & half structure
 // medit to show labels
+// nicole.spillane@cmap.polytechnique.fr
+// tournier@ljll.math.upmc.fr
 
 real sqrt2=sqrt(2.);
 macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
@@ -92,10 +103,12 @@ func mesh3 build3d(mesh pont2d, bool show, int m)
     return pont;
 }
 
-func real simulerdeplacement(bool show, real e, int n, int m, bool adapt)
+func real simulerdeplacement(bool show, bool half, real e, int n, int m, bool adapt)
 {
     [u1, u2, u3] = [0, 0, 0]; // pour mettre à jour le maillage
     
+    if (half)
+    {
     solve Lame([u1,u2,u3],[v1,v2,v3])=
     int3d(pont)(  
             lambda*div(u1,u2,u3)*div(v1,v2,v3)	
@@ -103,9 +116,24 @@ func real simulerdeplacement(bool show, real e, int n, int m, bool adapt)
             )
     - int3d(pont) (gravity*v3)
     + on(7,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
-    + on(12,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
-    - int2d(pont, 1)(fz*v3) // condition force surfacique (Neumann)
+    + on(8, u1=0)
+    - int2d(pont, 1)(fz*v3)
+    //- int2d(pont, 8)((+fz/e*z+fz)*v3) // condition force surfacique (Neumann)
     ;
+    }
+    else
+    {
+        solve Lame([u1,u2,u3],[v1,v2,v3])=
+    int3d(pont)(  
+            lambda*div(u1,u2,u3)*div(v1,v2,v3)	
+            +2.*mu*( epsilon(u1,u2,u3)'*epsilon(v1,v2,v3) )
+            )
+    - int3d(pont) (gravity*v3)
+    + on(7,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
+    + on(12,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
+    - int2d(pont, 1)(fz*v3)
+    ; // condition force surfacique (Neumann)
+    }
 
     real dmax= u3[].min; // min ou max ?
 
@@ -120,7 +148,9 @@ func real simulerdeplacement(bool show, real e, int n, int m, bool adapt)
         {
             geom = " | auto";
         }
-        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom, ps="plot.ps");
+        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom + " | lateral=" + u2[].max, ps="plot.ps");     
+        //plot((dy(u1) + dx(u2))[], wait=1);
+
         //exporter en vtk puis paraview
         //enregistrer les solutions, u1, U2, u3 et maillage : write to file (ofstream, save mesh)
     }
@@ -132,7 +162,7 @@ func real deplacementmax(bool show, bool half, real e, int n, int m)
 {
     mesh pont2d = build2d(show, half, e, n);
     pont = build3d(pont2d, show, m);
-    real dmax = simulerdeplacement(show, e, n, m, false);
+    real dmax = simulerdeplacement(show, half, e, n, m, false);
     return dmax;
 }
 
@@ -186,7 +216,7 @@ else if (s == "a") // todo adaptation manuelle
 
     while (true)
     {
-        simulerdeplacement(show, e, n, m, true);
+        simulerdeplacement(show, half, e, n, m, true);
 
         pont2d = adaptmesh(pont2d, [u1, u2]);
         if (show)
@@ -198,9 +228,9 @@ else if (s == "a") // todo adaptation manuelle
 }
 else if (s == "m")
 {
-    real e = 0.1;   
+    real e = 0.155;   
     bool show = true;
-    deplacementmax(show, true, e, n, m);
+    deplacementmax(show, true, e, n/2, m);
 }
 else if (s == "s")
 {
