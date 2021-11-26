@@ -76,9 +76,7 @@ On injecte les conditions de Neumann et de Dirichlet dans l'équation : %+condit
     \end{cases}
 \end{equation}
 
-Sommons maintenant les trois équations.
-
-
+Sommons maintenant les trois équations pour chaque $i \in \{1,2,3\}$.
 
 On définit :
 
@@ -94,7 +92,9 @@ $$
 \end{pmatrix}
 $$
 
-On arrive donc au problème suivant, après quelques calculs pour mettre réécrire l'équation avec la fonction précédemment définie :
+On peut développer tous les opérateurs avec les dérivées partielles pour après quelques calculs réécrire l'équation avec la fonction précédemment définie et la mettre sous la forme ci-dessous.
+
+On arrive donc au problème suivant  :
 
 Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
 \begin{equation}
@@ -103,3 +103,7 @@ Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
         \vec{u} = 0 \textrm{ sur } \Gamma_S
     \end{cases}
 \end{equation}
+
+Intéressons-nous maintenant à la moitié de la structure. En effet, on remarque un plan de symétrie selon $x=0$, et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
+
+
