@@ -71,6 +71,16 @@
 
     \subsection{Approximation graphique}
     \subsection{Raffinement de la solution}
+    Afin d'utiliser la méthode dichotomie, nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisé pour calculer une épaisseur moyenne $e^n$ 	qui donnera le déplacement $d^n$. Si:
+    \begin{itemize}
+    \item $|d^n| <= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{max}$ et $e^n_{min}$ reste constante.
+    \item $|d^n| >= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
+    \end{itemize}
+    À partir du graph \ref{...} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de 10 cm et 30 cm respectivement. Après les calculs, les valeurs obtenues sont:
+    \begin{center}
+    $d_n = - 0,0999397 m$
+    $e_n = 0,1531125 m$
+    \end{center}
     
     \clearpage
     \appendix
