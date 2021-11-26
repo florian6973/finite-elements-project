@@ -70,16 +70,24 @@
     \section{Optimisation de l'épaisseur}
 
     \subsection{Approximation graphique}
+    Pour commencer à optimiser l'épaisseur du pont, nous avons utilisée l'équation ref{...} pour calculer le déplacement en fonction de l'épaisseur. Celle-ci a varié 	de $0,1$ jusqu'à $0,3$ mètres, sachant que nous avons été limité par le rayon $r = 0,35 m$, avec des incréments de $0,006 m$.
+    
+    Le graph obtenu est montré dans la Figure ref {...} : 
     \subsection{Raffinement de la solution}
     Afin d'utiliser la méthode dichotomie, nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisé pour calculer une épaisseur moyenne $e^n$ 	qui donnera le déplacement $d^n$. Si:
+    
     \begin{itemize}
     \item $|d^n| <= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{max}$ et $e^n_{min}$ reste constante.
     \item $|d^n| >= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
     \end{itemize}
-    À partir du graph \ref{...} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de 10 cm et 30 cm respectivement. Après les calculs, les valeurs obtenues sont:
+   
+   À partir du graph \ref{...} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de 10 cm et 30 cm respectivement. Les calculs ont été fait dans une boucle \emph {while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ et la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.001$, les calculs seront faites. Nous avons choisit cette valeur de $0.001$ par des essais pour avoir le compromis entre une bonne valeur obtenu pour l'épaisseur et le temps de calcul.
+    
+    Nous avons aussi remarqué que une condition en plus serait nécessaire pour assurer un déplacement plus petit que $ 0.1 m$. De cette façon, l'épaisseur finale sera $e^n_{max}$ et le déplacément sera calculé par rapport à elle. Alors, les valeurs obtenues sont:
+
     \begin{center}
-    $d_n = - 0,0999397 m$
-    $e_n = 0,1531125 m$
+    $d^n = - 0,0999397 m$
+    $e^n_{max} = 0,1531125 m$
     \end{center}
     
     \clearpage
