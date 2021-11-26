@@ -101,9 +101,9 @@
     \item $|d^n| \ge |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
     \end{itemize}
    
-   À partir du graph montré dans la \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0,125 m$ et $0,175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
+   À partir du graph montré dans la Figure \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0,125 m$ et $0,175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
    
-   Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul. La valeur de la taille de la maille était aussi choisit pour $m = n = 10$.
+   Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.00001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul. La valeur de la taille de la maille était aussi choisit pour $m = n = 10$.
     
     Nous avons aussi remarqué que une condition en plus serait nécessaire pour assurer un déplacement plus petit que $ 0.1 m$. De cette façon, l'épaisseur finale sera $e^n_{max}$ et le déplacément sera calculé par rapport à elle. Alors, les valeurs obtenues sont:
 
