@@ -81,7 +81,7 @@
     
     Pour commencer à optimiser l'épaisseur du pont, nous avons utilisée l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur. Celle-ci a varié de $0,1$ jusqu'à $0,3$ mètres, sachant que nous avons été limité par le rayon $r = 0,35 m$, avec des incréments de $0,006 m$.
     
-    Le graph obtenu est montré dans la \ref{fig:graph} :
+    Le graph obtenu est montré dans la Figure \ref{fig:graph} :
     \begin{figure}[H]        
     \begin{center}
 	
@@ -97,8 +97,8 @@
     Afin d'utiliser la méthode dichotomie, nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisé pour calculer une épaisseur moyenne $e^n$ 	qui donnera le déplacement $d^n$. Si:
     
     \begin{itemize}
-    \item $|d^n| <= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{max}$ et $e^n_{min}$ reste constante.
-    \item $|d^n| >= |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
+    \item $|d^n| ≤ |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{max}$ et $e^n_{min}$ reste constante.
+    \item $|d^n| ≥ |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
     \end{itemize}
    
    À partir du graph montré dans la \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0,125 m$ et $0,175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
