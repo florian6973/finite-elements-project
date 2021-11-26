@@ -15,6 +15,18 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
     selon la méthode vue en cours sur les maillages.%faire varier n
     Nous avons ensuite maillé la surface à l'aide de la fonction \emph{buildmesh} de FreeFem++.
 
+    \begin{figure}[H]        
+        \begin{center}
+        
+            \includegraphics[width=12cm]{imgs/all_maillage_default.PNG}
+            \caption{Schéma de la géométrie du pont. Une force surfacique $f= - 5x10^8 N m^(-2)$ est appliquée à sa surface supérieure. Le déplacement maximale $d$ est montré en bleue, en vert c'est $\gamma$F, surface dans lequelle la force est appliquée et $\gamma$S est la surface inférieure fixe. Le système est qui est soumis à la gravité $g$.}
+            \label{fig:problem}
+        
+        \end{center}
+    \end{figure}
+
+    On note $n$ le paramètre contrôlant le nombre de subdivisions pour une bordure du maillage.
+
 \end{solution}
 %optimisation temps
 

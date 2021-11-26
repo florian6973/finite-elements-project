@@ -24,7 +24,7 @@ def main():
     plt.title("Evolution de l'affaissement en fonction de l'épaisseur du pont")
     
     # function to show the plot
-    plt.savefig('graph.png')
+    plt.savefig('imgs/graph.png')
     plt.show()
 
 if __name__ == "__main__":
