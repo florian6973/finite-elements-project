@@ -28,7 +28,7 @@
 	\end{center}
     \end{figure}
     
-    La structure est considérée comme homogène avec les extrémités inférieures fixes et une largeur $p = 0,5 m$. 
+    La structure est considérée comme homogène avec les extrémités inférieures fixes et une largeur $p = 0.5 m$. 
     
     Les données fournis pour ce système sont :
     
@@ -42,7 +42,7 @@
     Nous avons adopté la stratégie suivante pour traiter ce projet, en trois parties :
     \begin{enumerate}
         \item Établissement de la formulation variationelle pour ce problème ;
-        \item Résolution à épaisseur fixée : nous avons écrit un programme avec la langage FreeFem++ pour résoudre le système à épaisseur fixe $e = 0,1 m$, 
+        \item Résolution à épaisseur fixée : nous avons écrit un programme avec la langage FreeFem++ pour résoudre le système à épaisseur fixe $e = 0.1 m$, 
             avec une maille initialement bidimentionelle qui est ensuite complétée avec la fonction $buildlayers$. 
             Nous avons étudié la différence entre des solutions calculées pour la pièce et pour sa moitié ainsi que la précision du résultat en variant le maillage.
         \item Optimisation de l'épaisseur :
@@ -79,7 +79,7 @@
 
     \subsection{Approximation graphique}
     
-    Pour commencer à optimiser l'épaisseur du pont, nous avons utilisée l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur. Celle-ci a varié de $0,1$ jusqu'à $0,3$ mètres, sachant que nous avons été limité par le rayon $r = 0,35 m$, avec des incréments de $0,006 m$.
+    Pour commencer à optimiser l'épaisseur du pont, nous avons utilisée l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur. Celle-ci a varié de $0.1$ jusqu'à $0.3$ mètres, sachant que nous avons été limité par le rayon $r = 0.35 m$, avec des incréments de $0.006 m$.
     
     Le graph obtenu est montré dans la Figure \ref{fig:graph} :
     \begin{figure}[H]        
@@ -91,7 +91,7 @@
     
 	\end{center}
     \end{figure}
-    Ce graph montre que à partir de environ $0,15 m$ le déplacement commence a être dans les conditions souhaités. Ce fait nous aide à définir des conditions pour le raffinement des solutions dans la prochaine section, car nous avons un intervalle plus petit à regarder, $[15; 17,5]$ ce qui facilite les calculs.
+    Ce graph montre que à partir de environ $0,15 m$ le déplacement commence a être dans les conditions souhaités. Ce fait nous aide à définir des conditions pour le raffinement des solutions dans la prochaine section, car nous avons un intervalle plus petit à regarder, $[15; 17.5]$ ce qui facilite les calculs.
     \subsection{Raffinement de la solution}
     
     Afin d'utiliser la méthode dichotomie, nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisé pour calculer une épaisseur moyenne $e^n$ 	qui donnera le déplacement $d^n$. Si:
@@ -101,19 +101,19 @@
     \item $|d^n| \ge |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
     \end{itemize}
    
-   À partir du graph montré dans la Figure \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0,125 m$ et $0,175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
+   À partir du graph montré dans la Figure \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0.125 m$ et $0.175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
    
    Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.00001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul. La valeur de la taille de la maille était aussi choisit pour $m = n = 10$.
     
     Nous avons aussi remarqué que une condition en plus serait nécessaire pour assurer un déplacement plus petit que $ 0.1 m$. De cette façon, l'épaisseur finale sera $e^n_{max}$ et le déplacément sera calculé par rapport à elle. Alors, les valeurs obtenues sont:
 
     \begin{center}
-    $d^n = - 0,0999397 m$
+    $d^n = - 0.0999397 m$
     
-    $e^n_{max} = 0,1531125 m$
+    $e^n_{max} = 0.1531125 m$
     \end{center}
     
-    Pendant les essais pour trouver le compromis entre la taille de la maille, le temps de calcul et la différence $|d^n|-0.1$, nous avons remarqué que augmenter les éléments du maillage a donné des valeurs plus loins de $0,1 m$, même avec la diminuition de cette différence. Donc, ces valeurs sont les meilleures que nous avons trouvées pendant les différents tests, néanmoins nous ne pouvons pas être sûr qu'elles sont optimales, car son choix était arbitraire, donc il y a la possibilité que nous n'avons pas trouvé le meilleur compromis. Afin de continuer à optimiser ce problème, il va falloir écrire un code plus général qui trouvera ces bonnes valeurs avant de chercher le déplacement. 
+    Pendant les essais pour trouver le compromis entre la taille de la maille, le temps de calcul et la différence $|d^n|-0.1$, nous avons remarqué que augmenter les éléments du maillage a donné des valeurs plus loins de $0.1 m$, même avec la diminuition de cette différence. Donc, ces valeurs sont les meilleures que nous avons trouvées pendant les différents tests, néanmoins nous ne pouvons pas être sûr qu'elles sont optimales, car son choix était arbitraire, donc il y a la possibilité que nous n'avons pas trouvé le meilleur compromis. Afin de continuer à optimiser ce problème, il va falloir écrire un code plus général qui trouvera ces bonnes valeurs avant de chercher le déplacement. 
     \clearpage
     \appendix
     \section {Code source}
