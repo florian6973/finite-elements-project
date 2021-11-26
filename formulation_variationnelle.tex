@@ -94,10 +94,12 @@ $$
 \end{pmatrix}
 $$
 
-On arrive donc au problème suivant : trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
+On arrive donc au problème suivant, après quelques calculs pour mettre réécrire l'équation avec la fonction précédemment définie :
+
+Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
 \begin{equation}
     \begin{cases}
-        \displaystyle\int_{\Omega} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} v f - \int_\Omega v_i \rho g = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^2(\bar{\Omega})^3\\
+        \displaystyle\int_{\Omega} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} v f - \int_\Omega v_i \rho g = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega})^3\\
         \vec{u} = 0 \textrm{ sur } \Gamma_S
     \end{cases}
 \end{equation}
