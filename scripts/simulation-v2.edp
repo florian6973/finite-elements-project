@@ -1,4 +1,9 @@
+
+load "MUMPS_seq" // sinon bug matrice trop grosses
+load "msh3"
+load "mshmet"
 load "medit"
+load "mmg"
 include "cube.idp"
 
 // à rendre pour le 3 décembre
@@ -77,10 +82,10 @@ func mesh build2d(bool show, bool half, real e, int n)
     border b15(t=0, 1){x=t*l/2; y=-e; label=2;};
     border b16(t=1, 0){x=0; y=t*e-e; label=8;};
 
-    mesh pont2d = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
+    mesh pont2d = buildmesh(b1(n*2) + b2(n*2) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n/2) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n/2));
     if (half)
     {
-        pont2d = buildmesh(b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b14(n) + b15(n) + b16(n));
+        pont2d = buildmesh(b3(n) + b4(n) + b5(n) + b6(n) + b7(n/2) + b14(n*2) + b15(n*2) + b16(n));
     }
     if (show)
     {        
@@ -123,7 +128,7 @@ func real simulerdeplacement(bool show, bool half, real e, int n, int m, bool ad
     }
     else
     {
-        solve Lame([u1,u2,u3],[v1,v2,v3])=
+        solve Lame([u1,u2,u3],[v1,v2,v3], solver=sparsesolver)=
     int3d(pont)(  
             lambda*div(u1,u2,u3)*div(v1,v2,v3)	
             +2.*mu*( epsilon(u1,u2,u3)'*epsilon(v1,v2,v3) )
@@ -171,7 +176,7 @@ cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m 
 cin >> s;
 
 int n = 10;
-int m = n/4;
+int m = n/2;
 
 if (s == "g")
 {
@@ -214,29 +219,44 @@ else if (s == "a") // todo adaptation manuelle
     mesh pont2d = build2d(show, half, e, n);
     mesh3 pont = build3d(pont2d, show, m);
 
-    while (true)
-    {
-        simulerdeplacement(show, half, e, n, m, true);
+    int i = 0;
+    int nb = 20;
+    real[int] xx(nb), yy(nb);
+    int m = 15;
 
-        pont2d = adaptmesh(pont2d, [u1, u2]);
+    while (i < nb)
+    {
+        real d = simulerdeplacement(show, half, e, n, m, true);
+
+        pont2d = adaptmesh(pont2d, u1, u2, err=1e-3, nbvx=1e6, hmin=0.005, hmax=0.2);
         if (show)
         {
             plot(pont2d, wait=true);
         }
         pont = build3d(pont2d, show, m);
+
+        xx[i] = i+1;
+        yy[i] = d;
+        cout << i << endl;
+        i++;
+    }
+    {// file for gnuplot
+    ofstream gnu("plot2.txt");
+    for (int i = 0; i < nb; i++)
+        gnu << xx[i] << " " << yy[i] << endl;
     }
 }
 else if (s == "m")
 {
-    real e = 0.155;   
+    real e = 0.1;   
     bool show = true;
-    deplacementmax(show, true, e, n/2, m);
+    deplacementmax(show, true, e, n*4,m*4);//n/2, m);
 }
 else if (s == "s")
 {
-    real e = 0.155;   
+    real e = 0.1;   
     bool show = true;
-    deplacementmax(show, false, e, n, m);
+    deplacementmax(show, false, e, n*4, m*4); //n, m);
 }
 else if (s == "b")
 {
@@ -248,6 +268,88 @@ else if (s == "b")
         {
             deplacementmax(show, false, e, n2, m2);
         }
+    }
+}
+
+else if (s == "a2") // todo adaptation manuelle
+{
+    real e = 0.1;   
+    bool show = true;
+    bool half = false;
+    
+    cout << "CTRL-C to stop" << endl;
+
+    mesh pont2d = build2d(show, half, e, n);
+    pont = build3d(pont2d, show, m);
+
+    int i = 0;
+    int nb = 10;
+    real[int] xx(nb), yy(nb);
+
+    int n = 5;
+    while (i < nb)
+    {
+        real m = n/2;
+        real d = simulerdeplacement(show, half, e, n, m, true);
+
+        pont2d = build2d(show, half, e, n);
+        //pont2d = adaptmesh(pont2d, [u1, u2]);
+        if (show)
+        {
+            plot(pont2d, wait=true);
+        }
+        pont = build3d(pont2d, show, m);
+
+        xx[i] = i+1;
+        yy[i] = d;
+        cout << i << endl;
+        i++;
+        n+= 5;
+    }
+    {// file for gnuplot
+    ofstream gnu("plot3.txt");
+    for (int i = 0; i < nb; i++)
+        gnu << xx[i] << " " << yy[i] << endl;
+    }
+}
+else if (s == "a3") // todo adaptation manuelle
+{
+    real e = 0.1;   
+    bool show = true;
+    bool half = false;
+    
+    cout << "CTRL-C to stop" << endl;
+
+    mesh pont2d = build2d(show, half, e, n);
+    pont = build3d(pont2d, show, m);
+
+    int i = 0;
+    int nb = 20;
+    real[int] xx(nb), yy(nb);
+    int m = 15;
+
+    while (i < nb)
+    {
+        real d = simulerdeplacement(show, half, e, n, m, true);
+
+        //pont2d = adaptmesh(pont2d, u1, u2, err=1e-3, nbvx=1e6, hmin=0.005, hmax=0.2);
+        //pont = build3d(pont2d, show, m);
+        real[int] met=mshmet(pont, [u1, u2, u3], aniso=1, hmax=0.1, err=1e-4);
+        pont = mmg3d(pont,metric=met);
+        if (show)
+        {
+            plot(pont, wait=true);
+        }
+
+        xx[i] = i+1;
+        yy[i] = d;
+        cout << i << endl;
+        i++;
+    }
+    {// file for gnuplot
+    ofstream gnu("plot4.txt"); // marche mieux
+    for (int i = 0; i < nb; i++)
+        gnu << xx[i] << " " << yy[i] << endl;
     }
 }
 // grep "mmg3d(" */*.edp

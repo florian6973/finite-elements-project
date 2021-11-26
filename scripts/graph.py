@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def main():
     x = []
     y = []
-    with open('plot.txt', 'r') as f:
+    with open('scripts/plot.txt', 'r') as f:
         lines = f.readlines()
         for l in lines:
             xt, yt = l.split(' ')
