@@ -27,7 +27,7 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
     \end{figure}
 
     On remarque cependant sur la figure \ref{fig:maillage_default} que la zone d'intérêt a un maillage très grossier, tandis que les pieds du pont sont très maillés. 
-    On choisit donc de pondérer les subdivisions du maillage ($n/2$, $n$ et $2*n$), ce qui donne la figure \ref{fig:maillage_pondere}.
+    On choisit donc de pondérer les subdivisions du maillage ($n/2$, $n$ et $2n$), ce qui donne la figure \ref{fig:maillage_pondere}.
     
     \begin{figure}     
         \begin{center}
@@ -91,9 +91,44 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
 \end{problem}
 
 \begin{solution}
-    Nous avons implémenté une fonction d'adaptation du mesh automatique avec la fonction \emph{adaptmesh}
 
-    Nous l'utilisons sur toute la structure et la moitié de la structure pour vérifier la cohérence.
+    Nous pouvons remarquer que le déplacement n'est pas le même entre la moitié de la structure et sa totalité (33 cm par rapport 21 cm).
+    Cela pourrait donc signaler que le maillage n'est pas suffisamment fin pour que la solution approchée est convergée vers la solution exacte.
+    Nous allons donc utiliser trois techniques pour faire converger les fonctions trouvées :
+    \begin{itemize}
+        \item Un raffinement manuel du maillage.
+        \item Un raffinement automatique du maillage dans le plan de coupe avec \emph{adaptmesh} et manuel en profondeur.
+        \item Un raffinement entièrement automatique avec la fonction \emph{mshmet} et \emph{mmg3d}.
+    \end{itemize}
+
+    D'après la figure \ref{fig:cvg}, on en déduit que le déplacement réel doit être proche de 48 cm. On constate une petite différence d'asymptote avec l'adaptation manuelle,
+    qui pourrait être dûe par exemple par à la lenteur de la convergence ou, de manière plus probable, à des paramètres dans les fonctions d'adaptations du maillage
+    (semi-)automatiques pas suffisamment optimisés. Par exemple, diminuer le paramètre erreur $err$ de 0.001 à 0.0001 pourrait améliorer ces méthodes (mais cela aurait un
+    coût temporel conséquent). On constate cependant que la vitesse de convergence avec les fonctions d'adaptation est beaucoup plus rapide avec les paramètres choisis.
+
+    Pour la suite des simulations, on choisit donc un maillage manuel avec $n=30$ et $m=15$, qui allie bonnes performances (1 seconde de calcul) avec une précision qui semble satisfaisante.
+    
+    \begin{figure}        
+        \begin{center}
+        
+            \includegraphics[width=16.5cm]{imgs/cvg.png}
+            \caption{Résultats des simulations}
+            \label{fig:cvg}
+        
+        \end{center}
+    \end{figure}
+
+    On effectue la même étude de convergence pour la demi-structure.
+
+
+
+    Le détail des techniques d'adaptation de maillage peut être trouvées dans le code, disponible en annexe \ref{source_code}.
+
+
+    Les simulations ont mises quelques minutes à être calculées. 
+    Il aurait pu être intéressant d'utiliser \emph{FreeFem++-mpi} et \emph{MUMPS-mpi} afin d'accélérer les calculs sur nos PCs.
+    Il serait également possible de comparer les temps de chaque méthode pour savoir laquelle employée afin d'avoir les meilleures performances avec la meilleure précision.
+    Dans tous les cas, il faut spécifier à toutes ces fonctions les "bons" arguments pour obtenir des résultats satisfaisants.
 \end{solution}
 %critique : pas d'adapatation de m
 
@@ -108,4 +143,4 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
 % problème 2d équivalent
 % adaptation de maillage 3d mmg3d et mshmet
 % mumps, parallèle autre exécutable freefem
-% erreur de valeur
+% erreur de valeurd

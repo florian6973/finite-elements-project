@@ -20,9 +20,7 @@ où $g$ est l'accélération de la pesanteur standard.
 
 On se place en 3D. On définit le domaine $\Omega$ comme l'ensemble du pont (qui est un polygone), et la frontière $\Gamma$ est partitionnée comme selon le schéma.
 
-Le schéma n'est pas à l'échelle.
-
-D'après le cours de mécanique,
+D'après le cours de mécanique des matériaux,
 
 \begin{equation}
     \begin{cases}
@@ -113,10 +111,10 @@ $$
 
 On constate enfin, en développant, que :
 $$
-(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})\frac{\partial v_i}{\partial x_j} = 2\epsilon(\vec{u})\epsilon(\vec{v})
+(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})\frac{\partial v_i}{\partial x_j} = 2\epsilon(\vec{u})^T\epsilon(\vec{v})
 $$
 
-On arrive donc au problème suivant  :
+On arrive donc au problème suivant qui est sous forme variationnelle (formulation faible)  :
 
 Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
 \begin{equation}\label{varia}

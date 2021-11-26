@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 def main():
     x = []
     y = []
-    with open('scripts/plot.txt', 'r') as f:
+    with open('scripts/plot_ed.txt', 'r') as f:
         lines = f.readlines()
         for l in lines:
             xt, yt = l.split(' ')
@@ -24,7 +24,7 @@ def main():
     plt.title("Evolution de l'affaissement en fonction de l'épaisseur du pont")
     
     # function to show the plot
-    plt.savefig('imgs/graph.png')
+    plt.savefig('imgs/ed.png')
     plt.show()
 
 if __name__ == "__main__":

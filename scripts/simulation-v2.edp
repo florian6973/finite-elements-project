@@ -83,6 +83,8 @@ func mesh build2d(bool show, bool half, real e, int n)
     border b16(t=1, 0){x=0; y=t*e-e; label=8;};
 
     mesh pont2d = buildmesh(b1(n*2) + b2(n*2) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n/2) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n/2));
+    //mesh pont2d = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
+
     if (half)
     {
         pont2d = buildmesh(b3(n) + b4(n) + b5(n) + b6(n) + b7(n/2) + b14(n*2) + b15(n*2) + b16(n));
@@ -153,7 +155,7 @@ func real simulerdeplacement(bool show, bool half, real e, int n, int m, bool ad
         {
             geom = " | auto";
         }
-        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom + " | lateral=" + u2[].max, ps="plot.ps");     
+        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom + " | lateral=" + u2[].max);//, ps="plot.ps");     
         //plot((dy(u1) + dx(u2))[], wait=1);
 
         //exporter en vtk puis paraview
@@ -175,13 +177,13 @@ string s;
 cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m pour simuler avec la moitie de la maille a pour simuler avec ladaptation du mesh d pour la dichotomie b pour adaptation manuelle" << endl;
 cin >> s;
 
-int n = 10;
+int n = 30; // paramètre choisit dans la première partie
 int m = n/2;
 
 if (s == "g")
 {
     real e = 0.1;//0.001; pas trop petit pour intéressant
-    real inc = 0.006;
+    real inc = 0.01;
     real rmax = 0.3; //r;
     int nb = (rmax-e)/inc + 1;
     real[int] xx(nb), yy(nb);
@@ -193,12 +195,13 @@ if (s == "g")
         xx[i] = e;
         yy[i] = dmax;
         cout << "e=" << e << endl;
+        cout << "d=" << dmax << endl;
         e += inc;
         i += 1;
     }
 
     {// file for gnuplot
-        ofstream gnu("plot.txt");
+        ofstream gnu("scripts/plot_ed.txt");
         for (int i = 0; i < nb; i++)
            gnu << xx[i] << " " << yy[i] << endl;
     }
@@ -208,11 +211,11 @@ else if (s == "d")
 {
     cout << "todo" << endl;
 }
-else if (s == "a") // todo adaptation manuelle
+else if (s == "a_sman") // todo adaptation manuelle
 {
     real e = 0.1;   
-    bool show = true;
-    bool half = false;
+    bool show = false;
+    bool half = true;
     
     cout << "CTRL-C to stop" << endl;
 
@@ -220,9 +223,9 @@ else if (s == "a") // todo adaptation manuelle
     mesh3 pont = build3d(pont2d, show, m);
 
     int i = 0;
-    int nb = 20;
+    int nb = 10;
     real[int] xx(nb), yy(nb);
-    int m = 15;
+    int m = 4;
 
     while (i < nb)
     {
@@ -239,9 +242,15 @@ else if (s == "a") // todo adaptation manuelle
         yy[i] = d;
         cout << i << endl;
         i++;
+        m+=2;
     }
     {// file for gnuplot
-    ofstream gnu("plot2.txt");
+    string name = "scripts/plot_cvg_sman.txt";
+    if (half)
+    {
+        name = "scripts/plot_cvg_smanH.txt";
+    }
+    ofstream gnu(name);
     for (int i = 0; i < nb; i++)
         gnu << xx[i] << " " << yy[i] << endl;
     }
@@ -250,13 +259,19 @@ else if (s == "m")
 {
     real e = 0.1;   
     bool show = true;
-    deplacementmax(show, true, e, n*4,m*4);//n/2, m);
+    deplacementmax(show, true, e, n/2, m);
+    //deplacementmax(show, true, e, n,m);//n*4,m*4);//n/2, m);
 }
 else if (s == "s")
 {
     real e = 0.1;   
     bool show = true;
-    deplacementmax(show, false, e, n*4, m*4); //n, m);
+    //n=10;
+    //m=n/4;
+    
+    int n = 30;
+    int m = 15;
+    deplacementmax(show, false, e, n, m);//n*4, m*4); //n, m);
 }
 else if (s == "b")
 {
@@ -271,14 +286,16 @@ else if (s == "b")
     }
 }
 
-else if (s == "a2") // todo adaptation manuelle
+else if (s == "a_man") // todo adaptation manuelle
 {
     real e = 0.1;   
-    bool show = true;
-    bool half = false;
+    bool show = false;
+    bool half = true;
     
     cout << "CTRL-C to stop" << endl;
 
+    int n = 10;
+    int m = n/2;
     mesh pont2d = build2d(show, half, e, n);
     pont = build3d(pont2d, show, m);
 
@@ -286,12 +303,12 @@ else if (s == "a2") // todo adaptation manuelle
     int nb = 10;
     real[int] xx(nb), yy(nb);
 
-    int n = 5;
     while (i < nb)
     {
-        real m = n/2;
         real d = simulerdeplacement(show, half, e, n, m, true);
 
+        n+= 5;
+        int m = n/2;
         pont2d = build2d(show, half, e, n);
         //pont2d = adaptmesh(pont2d, [u1, u2]);
         if (show)
@@ -304,27 +321,31 @@ else if (s == "a2") // todo adaptation manuelle
         yy[i] = d;
         cout << i << endl;
         i++;
-        n+= 5;
     }
     {// file for gnuplot
-    ofstream gnu("plot3.txt");
+    string name = "scripts/plot_cvg_man.txt";
+    if (half)
+    {
+        name = "scripts/plot_cvg_manH.txt";
+    }
+    ofstream gnu(name);
     for (int i = 0; i < nb; i++)
         gnu << xx[i] << " " << yy[i] << endl;
     }
 }
-else if (s == "a3") // todo adaptation manuelle
+else if (s == "a_auto") // todo adaptation manuelle
 {
     real e = 0.1;   
-    bool show = true;
-    bool half = false;
+    bool show = false;
+    bool half = true;
     
     cout << "CTRL-C to stop" << endl;
-
+    
     mesh pont2d = build2d(show, half, e, n);
     pont = build3d(pont2d, show, m);
 
     int i = 0;
-    int nb = 20;
+    int nb = 10;
     real[int] xx(nb), yy(nb);
     int m = 15;
 
@@ -347,7 +368,12 @@ else if (s == "a3") // todo adaptation manuelle
         i++;
     }
     {// file for gnuplot
-    ofstream gnu("plot4.txt"); // marche mieux
+    string name = "scripts/plot_cvg_auto.txt";
+    if (half)
+    {
+        name = "scripts/plot_cvg_autoH.txt";
+    }
+    ofstream gnu(name);
     for (int i = 0; i < nb; i++)
         gnu << xx[i] << " " << yy[i] << endl;
     }
