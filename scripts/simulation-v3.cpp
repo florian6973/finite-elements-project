@@ -174,11 +174,11 @@ else if (s == "d")
 
 //méthode dichotomie
 real enmin, enmax, en, dn;
-enmin = 0.1; // m
-enmax = 0.3; //m
-dn = 77;
+enmin = 0.125; // m
+enmax = 0.175; //m
+dn = 0;
 en = 0;
-while (abs(dn)!=0.1 & abs(abs(dn)-0.1)>=0.001)
+while (abs(dn)!=0.1 & abs(abs(dn)-0.1)>=0.00001)
 {
     en = (enmin+enmax)/2;
     dn = deplacementmax(false, false, en, 10, 10);
