@@ -103,7 +103,7 @@
    
    À partir du graph montré dans la \ref{fig:graph} généré dans la section précédente, nous avons choisit des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0,125 m$ et $0,175 m$ respectivement. La valeur de $e^n_{min} était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
    
-   Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul.
+   Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul. La valeur de la taille de la maille était aussi choisit pour $m = n = 10$.
     
     Nous avons aussi remarqué que une condition en plus serait nécessaire pour assurer un déplacement plus petit que $ 0.1 m$. De cette façon, l'épaisseur finale sera $e^n_{max}$ et le déplacément sera calculé par rapport à elle. Alors, les valeurs obtenues sont:
 
@@ -113,6 +113,7 @@
     $e^n_{max} = 0,1531125 m$
     \end{center}
     
+    Pendant les essais pour trouver le compromis entre la taille de la maille, le temps de calcul et la différence $|d^n|-0.1$, nous avons remarqué que augmenter les éléments du maillage a donné des valeurs plus loins de $0,1 m$, même avec la diminuition de cette différence. Donc, ces valeurs sont les meilleures que nous avons trouvées pendant les différents tests, néanmoins nous ne pouvons pas être sûr qu'elles sont optimales, car son choix était arbitraire, donc il y a la possibilité que nous n'avons pas trouvé le meilleur compromis. Afin de continuer à optimiser ce problème, il va falloir écrire un code plus général qui trouvera ces bonnes valeurs avant de chercher le déplacement. 
     \clearpage
     \appendix
     \section {Code source}
