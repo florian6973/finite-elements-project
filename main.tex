@@ -65,8 +65,16 @@
         \input{formulation_variationnelle.tex}
     \end{solution}
 
-    \section{Résolution à épaisseur fixée}
+    \begin{problem}{2}
+    Utilisons les propriétés de symétrie pour obtenir un problème sous forme variationnelle portant uniquement sur la moitié de la structure.
+    \end{problem}
+    
+    \begin{solution}   
+        \input{formulation_variationnelle_moitie.tex}
+    \end{solution}
 
+    \section{Résolution à épaisseur fixée}
+        \input{epaisseur_fixe.tex}
     \section{Optimisation de l'épaisseur}
 
     \subsection{Approximation graphique}
@@ -76,9 +84,11 @@
     \appendix
     \section {Code source}
 
-    Disponible sur ...
+    Le code source du programme écrit est disponible sur \url{https://github.com/florian6973/finite-elements-project}.
 
-    \lstinputlisting[language=FreeFem]{simulation-v2.edp}
+    On y trouve aussi l'ensemble des ressources utilisées pour la rédaction du rapport.
+
+    %\lstinputlisting[language=FreeFem]{simulation-v2.edp}
 
 
     %code + lien github

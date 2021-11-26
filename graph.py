@@ -13,7 +13,7 @@ def main():
             x.append(round(float(xt)*100, 2))
             y.append(round(float(yt)*100, 2))
     # plotting the points
-    plt.plot(x, y)
+    plt.plot(x, y, linestyle='-', marker='+', color='b')
     
     # naming the x axis
     plt.xlabel('Epaisseur e (cm)')

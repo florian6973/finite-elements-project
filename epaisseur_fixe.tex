@@ -1,0 +1,21 @@
+%marqueur aux points de données
+% courbe en dessous/en dessus / intervalle dichotomie / condition d'arrêt / eps essai-erreur
+
+Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur fixée à $e=0.1$ m, à l'aide d'un programme FreeFem++.
+
+% link free fem
+
+\begin{problem}{3}
+    Modélisons le pont et maillons-le.
+\end{problem}
+
+
+\begin{solution}   
+    En suivant les indications de l'énoncé, nous avons commencé par réaliser les bordures, correctement "orientées" et "subdivisées", de la coupe du pont (selon l'axe $y$),
+    selon la méthode vue en cours sur les maillages.%faire varier n
+    Nous avons ensuite maillé la surface à l'aide de la fonction \emph{buildmesh} de FreeFem++.
+
+\end{solution}
+%optimisation temps
+
+% étude convergence

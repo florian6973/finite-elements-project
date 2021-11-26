@@ -1,0 +1,63 @@
+
+
+% rapport scolaire ou non, pas de barème, faire qqch de bien
+%résultat numériques
+Intéressons-nous maintenant à la moitié de la structure. 
+
+En effet, on remarque un plan de symétrie selon $x=0$ (passant par P), et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
+
+On s'intéresse à la partie droite du pont. On note $\Gamma_B$ la surface du bord correspondant à la tranche du pont, à l'endroit de la coupure.
+
+On souhaite déterminer les nouvelles conditions aux limites pour pouvoir obtenir la formulation variationnelle de ce problème.
+
+Les conditions sont inchangées sauf sur $\Gamma_B$.
+
+Tout d'abord, par symétrie, 
+$$\forall (x,y,z) \in \mathbb{R}^3,
+\begin{cases}
+ u_1(x,y,z) = - u_1(-x,y,z)\\
+ u_2(x,y,z) = u_2(-x,y,z)\\
+ u_3(x,y,z) = u_3(-x,y,z)
+\end{cases}
+$$
+
+En évaluant en $x=0$, il vient
+$$\forall (y,z) \in \mathbb{R}^2, u_1(0,y,z) = 0$$
+
+On en déduit que :
+
+$$\forall (y,z) \in \mathbb{R}^2, \partial_2 u_1 (0, y, z) = \lim_{dy\rightarrow 0} \frac{u_1(0,y+dy,z)-u_1(0,y,z)}{dy}=0$$
+
+et que, puisque $u_2$ est une fonction paire par rapport à la variable $x$, $\partial_1 u_2$ est une fonction impaire par rapport à $x$, donc nulle en $0$. On déduit des propriétés similaires pour la variable $z$ au lieu de $y$.
+
+On a donc la condition suivante : $u_1 = 0$ sur $\Gamma_B$ et $\sigma \cdot \vec{e_1}=
+\begin{pmatrix}
+    \sigma_{xx}\\
+    \sigma_{yx}\\
+    \sigma_{zx}
+\end{pmatrix}$
+
+On n'a pas besoin de connaitre $\sigma_{xx}$ car on a déjà $u_1 = 0$ sur $\Gamma_B$. 
+
+D'après la loi de comportement et les propriétés précédemment démontrées, en notant $C$ une constante,
+ $$
+ \forall (y,z) \in \mathbb{R}^2,
+ \begin{cases}
+    \sigma_{yx}(0, y, z) = C (\partial_2 u_1 + \partial_1 u_2) = 0\\
+    \sigma_{zx}(0, y, z) = C (\partial_3 u_1 + \partial_1 u_3) = 0
+ \end{cases}
+$$
+
+En repartant de \ref{green}, on arrive au problème suivant, en notant $\Omega_m$ la moitié de la structure étudiée, et en restreignant $\Gamma_F$ et $\Gamma_S$ à $\Omega_m$ :
+
+Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega_m})^3$ tel que
+\begin{equation}\label{moitie}
+    \begin{cases}
+        \displaystyle\int_{\Omega_m} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} \vec{v} \cdot \vec{f} - \int_{\Omega_m} \rho \vec{v} \cdot \vec{g} = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega_m})^3\\
+        \vec{u} = 0 \textrm{ sur } \Gamma_S\\
+        u_1 = 0 \textrm{ sur } \Gamma_B
+    \end{cases}
+\end{equation}
+
+Pour prouver l'existence et l'unicité des solutions, nous pourrions utiliser le théorème de Lax-Milgram, après vérification des hypothèses.
+% relire schéma

@@ -65,7 +65,10 @@ $$\int_\Omega v_i \div \vec{\sigma_i} +  \int_\Omega v_i \rho g_i = 0$$
 
 On réalise une intégration par partie selon la formule de Green, car $\vec{\sigma_i} \in \mathcal{C}^1(\bar{\Omega})^3$ et $v_i \in \mathcal{C}^1(\bar{\Omega})$ :
 
-$$-\int_{\Omega} \vec{\sigma_i} \cdot \grad v_i + \int_{\Gamma} v_i (\vec{\sigma_i} \cdot \vec{n}) + \int_\Omega v_i \rho g_i = 0$$
+
+\begin{equation}\label{green}
+    -\int_{\Omega} \vec{\sigma_i} \cdot \grad v_i + \int_{\Gamma} v_i (\vec{\sigma_i} \cdot \vec{n}) + \int_\Omega v_i \rho g_i = 0
+\end{equation}
 
 On injecte les conditions de Neumann et de Dirichlet dans l'équation : %+conditions de dirichlet 
 
@@ -77,6 +80,22 @@ On injecte les conditions de Neumann et de Dirichlet dans l'équation : %+condit
 \end{equation}
 
 Sommons maintenant les trois équations pour chaque $i \in \{1,2,3\}$.
+
+En utilisant la convention de sommation d'Einstein (les indices répétés sont sommés, de $1$ à $3$), on remarque que :
+$$
+\vec{\sigma_i} \cdot \grad v_i = \sigma_{ij} \frac{\partial v_i}{\partial x_j}
+$$
+puis que, en notant $\delta$ le symbole de Kronecker et en utilisant les propriétés de la trace :
+$$
+\sigma_{ij} = \lambda \Tr(\grad \vec{u}) \delta_{ji} + \mu (\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})
+$$
+
+On utilise le fait que $\Tr(\grad \vec{u}) = \div \vec{u}$ pour arriver à 
+
+$$
+\vec{\sigma_i} \cdot \grad v_i = \lambda \div \vec{u} \div \vec{v} + \mu (\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})\frac{\partial v_i}{\partial x_j}
+$$
+%(\delta_{ji} \frac{\partial v_i}{\partial x_j}) 
 
 On définit :
 
@@ -92,20 +111,18 @@ $$
 \end{pmatrix}
 $$
 
-On peut développer tous les opérateurs avec les dérivées partielles pour après quelques calculs réécrire l'équation avec la fonction précédemment définie et la mettre sous la forme ci-dessous.
+On constate enfin, en développant, que :
+$$
+(\frac{\partial u_i}{\partial x_j} + \frac{\partial u_j}{\partial x_i})\frac{\partial v_i}{\partial x_j} = 2\epsilon(\vec{u})\epsilon(\vec{v})
+$$
 
 On arrive donc au problème suivant  :
 
 Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega})^3$ tel que
-\begin{equation}
+\begin{equation}\label{varia}
     \begin{cases}
-        \displaystyle\int_{\Omega} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} v f - \int_\Omega v_i \rho g = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega})^3\\
+        \displaystyle\int_{\Omega} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} \vec{v} \cdot \vec{f} - \int_\Omega \rho \vec{v} \cdot \vec{g} = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega})^3\\
         \vec{u} = 0 \textrm{ sur } \Gamma_S
     \end{cases}
 \end{equation}
-
-% rapport scolaire ou non, pas de barème, faire qqch de bien
-%résultat numériques
-Intéressons-nous maintenant à la moitié de la structure. En effet, on remarque un plan de symétrie selon $x=0$, et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
-
 
