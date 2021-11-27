@@ -12,18 +12,20 @@
     % appendix pour code ?
 
     \section{Présentation du problème}
-    La méthode des éléments finis est une méthode matématique utilisée par industriels et chercheurs afin de résudre numériquement des équations aux dérivées partielles. Une application envisageable pour les calculs avec la méthode des éléments finis est l'optimisation de l'épaisseur d'une structure tridimensionelle, 
-    qui est ainsi l'objectif de ce projet. 
+    La méthode des éléments finis est une méthode mathématique utilisée par industriels et chercheurs 
+    afin de résoudre numériquement des équations aux dérivées partielles (EDP). 
+    Une application envisageable pour les calculs avec la méthode des éléments finis est l'optimisation de l'épaisseur d'une structure tridimensionelle, 
+    qui est l'objectif de ce projet. 
     La structure tridimensionnelle choisie est un pont pour lequel nous avons cherché à minimiser l'épaisseur
-    en respectant une contrainte de déplacement vertical maximal en son centre de $10$ cm malgré l'application d'une force surfacique
+    en respectant une contrainte de déplacement vertical maximal en son centre de $10$ cm (valeur absolue) malgré l'application d'une force surfacique
     constante sur la surface horizontale supérieure du pont. 
-    La géométrie de ce problème est tridimensionnelle et sa coupe verticale est montré dans la Figure \ref{fig:problem}.
+    La géométrie de ce problème est tridimensionnelle et sa coupe verticale est montrée dans la Figure \ref{fig:problem}.
     \begin{figure}[H]        
     \begin{center}
 	
         \includegraphics[width=12cm]{imgs/coupe_2D-schema.JPG}
         \caption{Schéma de la géométrie du pont. Une force surfacique $f= - 5\times10^8$ N m$^{-2}$ est appliquée à sa surface supérieure. 
-        Le déplacement maximale $d$ est montré en bleue, en vert c'est $\Gamma_F$, surface sur lequelle la force est appliquée et $\Gamma_S$ est la surface inférieure fixe. 
+        Le déplacement maximal $d$ est montré en bleu, en vert c'est $\Gamma_F$, surface sur lequelle la force est appliquée et $\Gamma_S$ est la surface inférieure fixe. 
         Le système est soumis à la gravité $g$.
         Le schéma n'est pas à l'échelle.}
         \label{fig:problem}
@@ -39,15 +41,15 @@
     \item Module d'Young : $E = 2.1 \times 10^11$ N m$^{-2}$
     \item Coefficient de Poisson : $\nu = 0.3$ 
     \item Masse Volumique : $\rho = 7800$ kg m$^{-3}$
-    \item Force imposée sur le bord supérieur : $f= - 5 \times 10^8$ N m$^{-2}$
+    \item Force surfacique imposée sur le bord supérieur : $f= - 5 \times 10^8$ N m$^{-2}$
     \end{itemize}
     
     Nous avons adopté la stratégie suivante pour traiter ce projet, en trois parties :
     \begin{enumerate}
-        \item Établissement de la formulation variationnelle pour ce problème.
+        \item Établissement de la formulation variationnelle de ce problème.
         \item Résolution à épaisseur fixée : nous avons écrit un programme avec la langage FreeFem++ pour résoudre le système à épaisseur fixe $e = 0.1$ m, 
             avec une maille initialement bidimentionelle qui est ensuite complétée avec la fonction $buildlayers$. 
-            Nous avons étudié la différence entre des solutions calculées pour la pièce et pour sa moitié ainsi que la précision du résultat en variant le maillage.
+            Nous avons étudié la différence entre des solutions calculées pour la pièce et pour sa moitié ainsi que la convergence du résultat en variant le maillage.
         \item Optimisation de l'épaisseur :
         \begin{enumerate}
             \item Approximation graphique : 
@@ -75,8 +77,8 @@
 
     \section{Résolution à épaisseur fixée}
         \input{epaisseur_fixe.tex}
-    \section{Optimisation de l'épaisseur}
 
+    \section{Optimisation de l'épaisseur}
     Nous cherchons dans cette partie à trouver l'épaisseur minimale du pont $e$ en respectant la contrainte de déplacement vertical (de moins de $10$ cm en valeur absolue).
 
     \subsection{Approximation graphique}
@@ -87,13 +89,13 @@
      nous avons utilisé le programme \emph{FreeFem++} codé à la partie précédente,
      qui repose sur l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur, avec les paramètres $n=30$ et $m=15$.
 
-    Pour tracer le déplacement vertical maximal (en valeur absolu),
+    Pour tracer le déplacement vertical maximal (en valeur absolue),
     nous avons fait varier l'épaisseur $e$
     de $0.1$ m jusqu'à $0.3$ m, en sachant que nous sommes limités par le rayon de courbure $r = 0.35$ m.
     Pour avoir suffisamment de points, nous avons choisi un incrément de $0.01$ m.
     La courbe obtenue est présentée dans la Figure \ref{fig:graph}.
 
-    \begin{figure}[H]        
+    \begin{figure}
     \begin{center}
 	
         \includegraphics[width=12cm]{imgs/ed.png}
@@ -110,7 +112,7 @@
     \subsection{Raffinement de la solution}
 
     \begin{problem}{6}
-        Estimons l'épaisseur optimale avec un algorithme de dichotomie.
+        Estimons l'épaisseur optimale avec un algorithme de dichotomie et concluons le problème.
     \end{problem}
     
     Afin d'utiliser la méthode de dichotomie, 
@@ -135,7 +137,7 @@
     et la valeur absolue de $d^n$ est supérieure à $d$). La deuxième condition permet d'éviter de dépasser le déplacement maximal imposé, une fois que l'on est 
     suffisamment proche du déplacement recherché.   
 
-    \begin{figure}[H]        
+    \begin{figure}   
         \begin{center}
         
             \includegraphics[width=12cm]{imgs/dicho.png}

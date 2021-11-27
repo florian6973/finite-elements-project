@@ -4,7 +4,8 @@
 %résultat numériques
 Intéressons-nous maintenant à la moitié de la structure. 
 
-En effet, on remarque un plan de symétrie selon $x=0$ (passant par P), et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
+En effet, on remarque un plan de symétrie selon $x=0$ (passant par P), 
+et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
 
 On s'intéresse à la partie droite du pont. On note $\Gamma_B$ la surface du bord correspondant à la tranche du pont, à l'endroit de la coupure.
 
@@ -28,7 +29,8 @@ On en déduit que :
 
 $$\forall (y,z) \in \mathbb{R}^2, \partial_2 u_1 (0, y, z) = \lim_{dy\rightarrow 0} \frac{u_1(0,y+dy,z)-u_1(0,y,z)}{dy}=0$$
 
-et que, puisque $u_2$ est une fonction paire par rapport à la variable $x$, $\partial_1 u_2$ est une fonction impaire par rapport à $x$, donc nulle en $0$. On déduit des propriétés similaires pour la variable $z$ au lieu de $y$.
+et que, puisque $u_2$ est une fonction paire par rapport à la variable $x$, $\partial_1 u_2$ est une fonction impaire par rapport à $x$, 
+donc nulle en $0$. On déduit des propriétés similaires pour la variable $z$ au lieu de $y$.
 
 On a donc la condition suivante : $u_1 = 0$ sur $\Gamma_B$ et $\sigma \cdot \vec{e_1}=
 \begin{pmatrix}
@@ -60,6 +62,7 @@ Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega_m})^3$ tel que
 \end{equation}
 
 Pour prouver l'existence et l'unicité des solutions, nous pourrions utiliser le théorème de Lax-Milgram, après vérification des hypothèses.
-Une autre approche du problème non traité dans ce document serait de se ramener au problème 2D équivalent, ce qui pourrait simplifier et optimiser grandement les simulations,
+
+Une autre approche du problème non traitée dans ce document serait de se ramener au problème 2D équivalent, ce qui pourrait simplifier et optimiser grandement les simulations,
 tout en fournissant des Approximations satisfaisantes pour la majorité des usages.
 % relire schéma

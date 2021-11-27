@@ -6,28 +6,7 @@ load "medit"
 load "mmg"
 include "cube.idp"
 
-// à rendre pour le 3 décembre
-// environ 10 - 15 pages
-//compter les figures dans les 10/15 pages, étude en fonction de h 
-// présenter le problème, la formulation variationnelle, quels éléments finis choisis, pourquoi, la taille du maillage
-// le plus simple pour résultat satisfaisant, P2, pas plus de précision mais beaucoup de degré de liberté en plus, pas p1 si dérivée deux fois pour thermique
-// entre p2 et p1 raffiné, mêm
-// pas code dans le rapport, à envoyer si besoin à part
-
-
 verbosity = 0;
-
-// question : comment retourner un tuple simuler déplacement pour faire évolution maillage ? OK normalement
-// question : définition de la normale n ? surface 2d ok ?
-// quesiton : càd moitié de la structure ?
-// question : pont pas variable globale ? NON
-// question : comment définir la région  sur laquelle intégrer ?
-// rédaction ?
-// todo commenter code
-// save img & half structure
-// medit to show labels
-// nicole.spillane@cmap.polytechnique.fr
-// tournier@ljll.math.upmc.fr
 
 real sqrt2=sqrt(2.);
 macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
@@ -52,7 +31,7 @@ real mu = E/(2*(1+nu));
 real lambda = E*nu/((1+nu)*(1-2*nu));
 
 mesh3 pont = cube(2,2,2); // default
-fespace Vh(pont,[P1,P1,P1]); // P1 ou P2 ?
+fespace Vh(pont,[P1,P1,P1]);
 Vh [u1,u2,u3], [v1,v2,v3];
 
 func mesh build2d(bool show, bool half, real e, int n)
@@ -125,7 +104,6 @@ func real simulerdeplacement(bool show, bool half, real e, int n, int m, bool ad
     + on(7,u1=0,u2=0,u3=0) // condition bord bas (Dirichlet)
     + on(8, u1=0)
     - int2d(pont, 1)(fz*v3)
-    //- int2d(pont, 8)((+fz/e*z+fz)*v3) // condition force surfacique (Neumann)
     ;
     }
     else
@@ -149,15 +127,12 @@ func real simulerdeplacement(bool show, bool half, real e, int n, int m, bool ad
         real coef= 0.1/abs(dmax);
         int[int] ref2=[1,0,2,0];
         mesh3 pontdeforme=movemesh3(pont,transfo=[x+u1*coef,y+u2*coef,z+u3*coef],label=ref2);
-        //pont=change(pontdeforme,label=ref2);
         string geom = " | (n,m)=" + n + "," + m;
         if (adapt)
         {
             geom = " | auto";
         }
-        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom + " | lateral=" + u2[].max);//, ps="plot.ps");     
-        //plot((dy(u1) + dx(u2))[], wait=1);
-
+        plot(pontdeforme, wait=1,cmm="e="+e+" | coef  amplification="+coef+" | dep=" + dmax + geom + " | lateral=" + u2[].max);//, ps="plot.ps");  
         //exporter en vtk puis paraview
         //enregistrer les solutions, u1, U2, u3 et maillage : write to file (ofstream, save mesh)
     }
@@ -174,10 +149,11 @@ func real deplacementmax(bool show, bool half, real e, int n, int m)
 }
 
 string s;
-cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m pour simuler avec la moitie de la maille a pour simuler avec ladaptation du mesh d pour la dichotomie b pour adaptation manuelle" << endl;
+cout << "Tapez s pour voir la configuration classique g pour tracer le graphe m pour simuler avec la moitie de la maille a_man ou a_sman ou a_auto pour simuler avec ladaptation du mesh d pour la dichotomie" << endl;
 cin >> s;
+// NB : on peut éditer les variables show et half dans le code avant de lancer le fichier pour jouer avec ces paramètres
 
-int n = 30; // paramètre choisit dans la première partie
+int n = 30; // paramètre choisi dans la première partie
 int m = n/2;
 
 if (s == "g")
@@ -332,7 +308,7 @@ else if (s == "b")
     }
 }
 
-else if (s == "a_man") // todo adaptation manuelle
+else if (s == "a_man")
 {
     real e = 0.1;   
     bool show = false;
@@ -379,7 +355,7 @@ else if (s == "a_man") // todo adaptation manuelle
         gnu << xx[i] << " " << yy[i] << endl;
     }
 }
-else if (s == "a_auto") // todo adaptation manuelle
+else if (s == "a_auto")
 {
     real e = 0.1;   
     bool show = true;
@@ -399,8 +375,6 @@ else if (s == "a_auto") // todo adaptation manuelle
     {
         real d = simulerdeplacement(show, half, e, n, m, true);
 
-        //pont2d = adaptmesh(pont2d, u1, u2, err=1e-3, nbvx=1e6, hmin=0.005, hmax=0.2);
-        //pont = build3d(pont2d, show, m);
         real[int] met=mshmet(pont, [u1, u2, u3], aniso=1, hmax=0.1, err=1e-4);
         pont = mmg3d(pont,metric=met);
         if (show)
@@ -424,5 +398,3 @@ else if (s == "a_auto") // todo adaptation manuelle
         gnu << xx[i] << " " << yy[i] << endl;
     }
 }
-// grep "mmg3d(" */*.edp
-//adapter les paramètres du mesh à la main sinon car contrôle la création
