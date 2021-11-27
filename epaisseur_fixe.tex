@@ -104,7 +104,7 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
         \item Un raffinement automatique du maillage dans le plan de coupe avec \emph{adaptmesh} et manuel en profondeur. On utilise \emph{adaptmesh} afin d'adapter le maillage 2D
         dans le plan $(xz)$,
                 et on augmente $m$ de 2 à chaque itération, en partant de 4. On spécifie 
-                notamment une erreur (d'interpolation P1) sur \emph{adaptmesh} de 0.001 au lieu de 0.01 par défaut afin d'avoir des 
+                notamment une erreur (d'interpolation $\mathbb{P}_1$) sur \emph{adaptmesh} de 0.001 au lieu de 0.01 par défaut afin d'avoir des 
                 résultats de convergence plus en accord avec la première méthode, malgré un temps de calcul plus long.
         \item Un raffinement entièrement automatique avec la fonction \emph{mshmet} (retourne une métrique qui va permettre
         d'améliorer le maillage et qui sera passée en paramètre de la fonction ci-après) et \emph{mmg3d}.
@@ -124,9 +124,10 @@ Dans cette partie, nous résolvons le problème variationnel avec l'épaisseur f
     D'après la figure \ref{fig:cvg}, on en déduit que le déplacement réel doit être proche de 48 cm. On constate une petite différence d'asymptote avec l'adaptation manuelle,
     qui pourrait être dûe par exemple par à la lenteur de la convergence ou, de manière plus probable, à des paramètres dans les fonctions d'adaptations du maillage
     (semi-)automatiques pas suffisamment optimisés. Par exemple, diminuer le paramètre erreur $err$ de 0.001 à 0.0001 pourrait améliorer ces méthodes (mais cela aurait un
-    coût temporel conséquent). On constate cependant que la vitesse de convergence avec les fonctions d'adaptation est beaucoup plus rapide avec les paramètres choisis.
+    coût temporel conséquent). On constate cependant que la vitesse de convergence avec les fonctions d'adaptation de FreeFem++
+    et MMG est beaucoup plus rapide (moins d'itérations) avec les paramètres choisis.
 
-    On effectue la même étude de convergence pour la demi-structure (figure \ref{fig:h_cvg})
+    On effectue la même étude de convergence pour la demi-structure (figure \ref{fig:h_cvg}).
 
     \begin{figure}        
         \begin{center}
