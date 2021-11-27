@@ -1,0 +1,83 @@
+load "medit"
+include "cube.idp"
+
+// question : où est rho et f (gravity à changer) ?
+// question : comment définir la région  sur laquelle intégrer ?
+// question : rotation ?
+// question : adaptmesh3 ?
+// rédaction ?
+
+real e = 0.1;
+real rho = 0.35;
+real h = 0.4;
+real l = 1.7-rho*2;
+real p = 0.5;
+real fz = -5e8;
+
+real E = 2.1e11;
+real sigma = 0.3;
+real g = -9.81;
+real gravity = rho*g;//-5e8;
+
+real mu = E/(2*(1+sigma));
+real lambda = E*sigma/((1+sigma)*(1-2*sigma));
+
+int n = 20;
+
+border b1(t=1, -1){x=t*l/2; y=e; label=1;};
+border b2(t=-1, 1){x=t*l/2; y=0; label=2;};
+
+border b3(t=0, pi/2){x=rho*cos(t)+l/2; y=rho*sin(t)+e-rho; label=3;};
+border b4(t=pi/2, 0){x=(rho-e)*cos(t)+l/2; y=(rho-e)*sin(t)-rho+e; label=4;};
+
+border b5(t=0, 1){x=l/2+rho-e; y=-t*h-rho+e; label=5;};
+border b6(t=1, 0){x=l/2+rho; y=-t*h-rho+e; label=6;};
+border b7(t=1, 0){x=l/2+rho-e*t; y=-h-rho+e; label=7;};
+
+
+border b8(t=pi/2, 0){x=-(rho*cos(t)+l/2); y=rho*sin(t)+e-rho; label=8;};
+border b9(t=0, pi/2){x=-((rho-e)*cos(t)+l/2); y=(rho-e)*sin(t)-rho+e; label=9;};
+
+border b10(t=1, 0){x=-(l/2+rho-e); y=-t*h-rho+e; label=10;};
+border b11(t=0, 1){x=-(l/2+rho); y=-t*h-rho+e; label=11;};
+border b12(t=0, 1){x=-(l/2+rho-e*t); y=-h-rho+e; label=12;};
+
+border b13(t=1,0){x=0; y=t*e;label=18;};
+
+plot(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n) + b13(n), wait=true);
+
+mesh test = buildmesh(b1(n) + b2(n) + b3(n) + b4(n) + b5(n) + b6(n) + b7(n) + b8(n) + b9(n) + b10(n) + b11(n) + b12(n));
+plot(test, wait=true);
+
+mesh coupe = square(2,10);
+
+mesh3 Th0 = buildlayers(test, 10, zbound=[-p/2,p/2]);  
+mesh3 Th = movemesh3(Th0, transfo=[x, y, z]); // TODO ne fonctionne pas
+plot(Th, wait=true);
+
+fespace Vh(Th,[P1,P1,P1]);
+Vh [u1,u2,u3], [v1,v2,v3];
+cout << "lambda,mu,gravity ="<<lambda<< " " << mu << " " << gravity << endl;
+
+real sqrt2=sqrt(2.);
+macro epsilon(u1,u2,u3)  [dx(u1),dy(u2),dz(u3),(dz(u2)+dy(u3))/sqrt2,(dz(u1)+dx(u3))/sqrt2,(dy(u1)+dx(u2))/sqrt2] // EOM
+macro div(u1,u2,u3) ( dx(u1)+dy(u2)+dz(u3) ) // EOM
+  
+solve Lame([u1,u2,u3],[v1,v2,v3])=
+  int3d(Th)(  
+	    lambda*div(u1,u2,u3)*div(v1,v2,v3)	
+	    +2.*mu*( epsilon(u1,u2,u3)'*epsilon(v1,v2,v3) ) //')
+	      )
+  - int3d(Th) (gravity*v2)
+  + on(7,u1=0,u2=0,u3=0)
+  + on(12,u1=0,u2=0,u3=0)
+  - int2d(Th, 1)(fz*v2)
+  ;
+real dmax= u1[].max;
+cout << " max deplacement = " << dmax << endl;
+real coef= 0.1/dmax;
+int[int] ref2=[1,0,2,0];
+mesh3 Thm=movemesh3(Th,transfo=[x+u1*coef,y+u2*coef,z+u3*coef],label=ref2);
+Thm=change(Thm,label=ref2);
+plot(Th,Thm, wait=1,cmm="coef  amplification = "+coef+"\ndep=" + u2[].max );
+

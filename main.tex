@@ -52,7 +52,7 @@
         \begin{enumerate}
             \item Approximation graphique : 
                 nous avons analysé la relation entre l'épaisseur et le déplacement afin de trouver un intervalle où le déplacement est inférieur ou égal à 10 cm.
-            \item Raffinement de la solution : nous avons utilisé la méthode de dichotomie pour résoudre le système.
+            \item Raffinement de la solution : nous avons utilisé la méthode de dichotomie pour résoudre le problème.
         \end{enumerate}
     \end{enumerate}
 
@@ -63,18 +63,15 @@
     \begin{problem}{1}
     Mettons le problème sous forme faible (variationnelle) pour pouvoir le résoudre avec la méthode des éléments finis.
     \end{problem}
+      
+    \input{formulation_variationnelle.tex}
     
-    \begin{solution}   
-        \input{formulation_variationnelle.tex}
-    \end{solution}
 
     \begin{problem}{2}
     Utilisons les propriétés de symétrie pour obtenir un problème sous forme variationnelle portant uniquement sur la moitié de la structure.
     \end{problem}
     
-    \begin{solution}   
-        \input{formulation_variationnelle_moitie.tex}
-    \end{solution}
+    \input{formulation_variationnelle_moitie.tex}
 
     \section{Résolution à épaisseur fixée}
         \input{epaisseur_fixe.tex}
@@ -86,43 +83,78 @@
     \begin{problem}{5}
         Encadrons par une approche graphique l'épaisseur optimale.
     \end{problem}
-    Pour commencer à optimiser l'épaisseur du pont, nous avons utilisée l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur. Celle-ci a varié de $0.1$ jusqu'à $0.3$ mètres, sachant que nous avons été limité par le rayon $r = 0.35 m$, avec des incréments de $0.006 m$.
+    Pour optimiser l'épaisseur du pont,
+     nous avons utilisé le programme \emph{FreeFem++} codé à la partie précédente,
+     qui repose sur l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur, avec les paramètres $n=30$ et $m=15$.
 
-    La courbe obtenue est montrée dans la Figure \ref{fig:graph} :
+    Pour tracer le déplacement vertical maximal (en valeur absolu),
+    nous avons fait varier l'épaisseur $e$
+    de $0.1$ m jusqu'à $0.3$ m, en sachant que nous sommes limités par le rayon de courbure $r = 0.35$ m.
+    Pour avoir suffisamment de points, nous avons choisi un incrément de $0.01$ m.
+    La courbe obtenue est présentée dans la Figure \ref{fig:graph}.
+
     \begin{figure}[H]        
     \begin{center}
 	
         \includegraphics[width=12cm]{imgs/ed.png}
-        \caption{Evolution de l'affaissement en fonction de l'épaisseur du pont. Chaque épaisseur utilisée pour le calcul est montré par une croix sur la courbe.}
+        \caption{Evolution de l'affaissement en fonction de l'épaisseur du pont. Chaque croix sur la courbe représente un résultat de simulation.}
         \label{fig:graph}
     
 	\end{center}
     \end{figure}
-    Ce graph montre que à partir de environ $0,15 m$ le déplacement commence a être dans les conditions souhaités. Ce fait nous aide à définir des conditions pour le raffinement des solutions dans la prochaine section, car nous avons un intervalle plus petit à regarder, $[15; 17.5]$ ce qui facilite les calculs.
+    
+    Cette courbe montre que l'épaisseur optimale se trouve entre $15$ cm et $17.5$ cm. 
+    Cela nous donne donc un intervalle de travail pour le raffinement des solutions dans la prochaine section :
+    l'avantage d'avoir un intervalle plus petit permet de gagner en performances dans la recherche d'une solution précise.
+
     \subsection{Raffinement de la solution}
+
+    \begin{problem}{6}
+        Estimons l'épaisseur optimale avec un algorithme de dichotomie.
+    \end{problem}
     
-    Afin d'utiliser la méthode dichotomie, nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisé pour calculer une épaisseur moyenne $e^n$ 	qui donnera le déplacement $d^n$. Si:
+    Afin d'utiliser la méthode de dichotomie, 
+    nous avons défini des variables $e^n_{min}$ et $e^n_{max}$  qui seront utilisées pour calculer une épaisseur moyenne $e^n$ 	
+    qui donnera le déplacement $d^n$. 
     
+    L'algorithme repose sur le principe itératif suivant :    
     \begin{itemize}
-    \item $|d^n| \le |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{max}$ et $e^n_{min}$ reste constante.
-    \item $|d^n| \ge |d_0|$, la valeur moyenne $e^n$ sera la nouvelle valeur de $e^n_{min}$ et $e^n_{max}$ reste constante.
+    \item Si $|d^n| \le |d_0|$, on choisit $e^n_max = e^n$ et $e^n_{min}$ reste constant.
+    \item Si $|d^n| \ge |d_0|$, on choisit $e^n_min = e^n$ et $e^n_{max}$ reste constant.
     \end{itemize}
    
-    À partir du graph montré dans la Figure \ref{fig:graph} généré dans la section précédente, 
-    nous avons choisi des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0.125 m$ et $0.175 m$ respectivement.
-    La valeur de $e^n_{min}$ était choisi dehors de l'intervalle d'intérêt pour pallier des imprécisions de lecture graphique.
-   
-    Les calculs ont été fait dans une boucle \emph{while} et la condition de arrêt était : tant que la valeur absolute de $d^n$ est différent de $0.1 m$ \emph{et} la valeur absolute de $|d^n|-0.1$ est plus petite ou égal à $0.00001$, les calculs seront faites. Nous avons choisit cette valeur de $0.00001$ par des essais pour avoir un compromis entre une bonne valeur d'épaisseur et le temps de calcul. La valeur de la taille de la maille était aussi choisit pour $m = n = 10$.
-    
-    Nous avons aussi remarqué que une condition en plus serait nécessaire pour assurer un déplacement plus petit que $ 0.1 m$. De cette façon, l'épaisseur finale sera $e^n_{max}$ et le déplacément sera calculé par rapport à elle. Alors, les valeurs obtenues sont:
+    À partir de la courbe de la figure \ref{fig:graph} générée dans la section précédente, 
+    nous avons choisi des valeurs initiales pour $e^n_{min}$ et $e^n_{max}$ de $0.13$ m et $0.2$ m respectivement.
 
+    On pose $\varepsilon = 0.001$.
+    Nous avons choisi $0.001$ m afin d'avoir une précision qui nous a semblé suffisante physiquement pour le problème, étant donné le contexte, tout en 
+    ayant un temps de calcul raisonnable.
+
+    Les calculs ont été faits dans une boucle \emph{while} avec la condition suivante :
+    la distance entre la valeur absolue de $d_n$ et $d$ est supérieure à $\varepsilon$ ou (la distance entre la valeur absolue de $d_n$ et $d$ est inférieure à $\varepsilon$ 
+    et la valeur absolue de $d^n$ est supérieure à $d$). La deuxième condition permet d'éviter de dépasser le déplacement maximal imposé, une fois que l'on est 
+    suffisamment proche du déplacement recherché.   
+
+    \begin{figure}[H]        
+        \begin{center}
+        
+            \includegraphics[width=12cm]{imgs/dicho.png}
+            \caption{Etude de la convergence de la dichotomie}
+            \label{fig:dicho}
+        
+        \end{center}
+    \end{figure}
+
+    Nous avons obtenu les valeurs (arrondies à $10^{-2}$), en quelques itérations, comme le montre la figure \ref{fig:dicho} :
     \begin{center}
-    $d^n = - 0.0999397 m$
-    
-    $e^n_{max} = 0.1531125 m$
+    $d^n = - 0.10$ m    \\
+    $e^n = 0.17$ m
     \end{center}
+
+    Ainsi, pour répondre à la problématique, une épaisseur de 0.17 m (soit 17 cm) semble être un bon candidat pour respecter les contraintes de déplacement (de 10 cm vertical maximum).
+    Il serait intéressant d'approfondir l'incertitude que l'on a sur le résultat, étant donné le choix du maillage notamment.        
+    %conclusion epaisseur avec incertitude
     
-    Pendant les essais pour trouver le compromis entre la taille de la maille, le temps de calcul et la différence $|d^n|-0.1$, nous avons remarqué que augmenter les éléments du maillage a donné des valeurs plus loins de $0.1 m$, même avec la diminuition de cette différence. Donc, ces valeurs sont les meilleures que nous avons trouvées pendant les différents tests, néanmoins nous ne pouvons pas être sûr qu'elles sont optimales, car son choix était arbitraire, donc il y a la possibilité que nous n'avons pas trouvé le meilleur compromis. Afin de continuer à optimiser ce problème, il va falloir écrire un code plus général qui trouvera ces bonnes valeurs avant de chercher le déplacement. 
     \clearpage
     \appendix
     \section {Code source}
@@ -133,8 +165,5 @@
     On y trouve aussi l'ensemble des ressources utilisées pour la rédaction du rapport.
 
     %\lstinputlisting[language=FreeFem]{simulation-v2.edp}
-
-
-    %code + lien github
     
 \end{document}

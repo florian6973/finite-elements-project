@@ -4,7 +4,7 @@
     real dmax = 0.1;
     real d = dmax*100;
     real e = 0;
-    real eps = 0.005;
+    real eps = 0.001;
 
     while (abs(d-dmax) > eps)
     {
