@@ -6,13 +6,11 @@
 \begin{document}
 
     \input{coverpage}%not necessary but looks fancy
-
-    % rappel du problème ? reprendre photo du sujet
-    % référence à la fin
-    % appendix pour code ?
+    
+    % références à la fin
 
     \section{Présentation du problème}
-    La méthode des éléments finis est une méthode mathématique utilisée par industriels et chercheurs 
+    La méthode des éléments finis est une méthode mathématique utilisée par les industriels et les chercheurs 
     afin de résoudre numériquement des équations aux dérivées partielles (EDP). 
     Une application envisageable pour les calculs avec la méthode des éléments finis est l'optimisation de l'épaisseur d'une structure tridimensionelle, 
     qui est l'objectif de ce projet. 
@@ -24,8 +22,8 @@
     \begin{center}
 	
         \includegraphics[width=12cm]{imgs/coupe_2D-schema.JPG}
-        \caption{Schéma de la géométrie du pont. Une force surfacique $f= - 5\times10^8$ N m$^{-2}$ est appliquée à sa surface supérieure. 
-        Le déplacement maximal $d$ est montré en bleu, en vert c'est $\Gamma_F$, surface sur lequelle la force est appliquée et $\Gamma_S$ est la surface inférieure fixe. 
+        \caption{Schéma de la géométrie du pont. Une force surfacique $f= - 5\times10^8$ N m$^{-2}$ est appliquée sur sa surface supérieure (en 3D).
+        Le déplacement maximal $d$ est montré en bleu. $\Gamma_F$, en vert, est la partie de la frontière de $\Omega$ sur lequelle la force est appliquée et $\Gamma_S$ est la partie de la frontière qui est fixe. 
         Le système est soumis à la gravité $g$.
         Le schéma n'est pas à l'échelle.}
         \label{fig:problem}
@@ -38,7 +36,7 @@
     Les données fournis pour ce système sont :
     
     \begin{itemize}
-    \item Module d'Young : $E = 2.1 \times 10^11$ N m$^{-2}$
+    \item Module d'Young : $E = 2.1 \times 10^{11}$ N m$^{-2}$
     \item Coefficient de Poisson : $\nu = 0.3$ 
     \item Masse Volumique : $\rho = 7800$ kg m$^{-3}$
     \item Force surfacique imposée sur le bord supérieur : $f= - 5 \times 10^8$ N m$^{-2}$
@@ -47,8 +45,8 @@
     Nous avons adopté la stratégie suivante pour traiter ce projet, en trois parties :
     \begin{enumerate}
         \item Établissement de la formulation variationnelle de ce problème.
-        \item Résolution à épaisseur fixée : nous avons écrit un programme avec la langage FreeFem++ pour résoudre le système à épaisseur fixe $e = 0.1$ m, 
-            avec une maille initialement bidimentionelle qui est ensuite complétée avec la fonction $buildlayers$. 
+        \item Résolution à épaisseur fixée : nous avons écrit un programme avec le langage FreeFem++ pour résoudre le système à une épaisseur fixe $e = 0.1$ m, 
+            avec une maille initialement bidimensionnelle et dont la dernière dimension est ajoutée avec la fonction $buildlayers$. 
             Nous avons étudié la différence entre des solutions calculées pour la pièce et pour sa moitié ainsi que la convergence du résultat en variant le maillage.
         \item Optimisation de l'épaisseur :
         \begin{enumerate}
