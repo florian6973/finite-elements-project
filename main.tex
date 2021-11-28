@@ -84,7 +84,7 @@
         Encadrons par une approche graphique l'épaisseur optimale.
     \end{problem}
     Pour optimiser l'épaisseur du pont,
-     nous avons utilisé le programme \emph{FreeFem++} codé à la partie précédente,
+     nous avons utilisé le programme \emph{FreeFem++} codé pour la partie précédente,
      qui repose sur l'équation \ref{varia} pour calculer le déplacement en fonction de l'épaisseur, avec les paramètres $n=30$ et $m=15$.
 
     Pour tracer le déplacement vertical maximal (en valeur absolue),
@@ -119,8 +119,8 @@
     
     L'algorithme repose sur le principe itératif suivant :    
     \begin{itemize}
-    \item Si $|d^n| \le |d_0|$, on choisit $e^n_max = e^n$ et $e^n_{min}$ reste constant.
-    \item Si $|d^n| \ge |d_0|$, on choisit $e^n_min = e^n$ et $e^n_{max}$ reste constant.
+    \item Si $|d^n| \le |d_0|$, on choisit $e^n_{max} = e^n$ et $e^n_{min}$ reste constant.
+    \item Si $|d^n| \ge |d_0|$, on choisit $e^n_{min} = e^n$ et $e^n_{max}$ reste constant.
     \end{itemize}
    
     À partir de la courbe de la figure \ref{fig:graph} générée dans la section précédente, 
