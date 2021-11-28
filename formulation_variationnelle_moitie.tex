@@ -4,7 +4,7 @@
 %résultat numériques
 Intéressons-nous maintenant à la moitié de la structure. 
 
-En effet, on remarque un plan de symétrie selon $x=0$ (passant par P), 
+En effet, on remarque un plan de symétrie $x=0$ (passant par P), 
 et parvenir à simuler uniquement une demi-structure permettrait de gagner en temps de calcul et en mémoire pour un même jeu de paramètres.
 
 On s'intéresse à la partie droite du pont. On note $\Gamma_B$ la surface du bord correspondant à la tranche du pont, à l'endroit de la coupure.
@@ -55,7 +55,7 @@ En repartant de \ref{green}, on arrive au problème suivant, en notant $\Omega_m
 Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega_m})^3$ tel que
 \begin{equation}\label{moitie}
     \begin{cases}
-        \displaystyle\int_{\Omega_m} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} \vec{v} \cdot \vec{f} - \int_{\Omega_m} \rho \vec{v} \cdot \vec{g} = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega_m})^3\\
+        \displaystyle\int_{\Omega_m} (\lambda \div \vec{u} \div \vec{v} + 2\mu \epsilon(\vec{u})^T \epsilon(\vec{v})) - \int_{\Gamma_F} \vec{v} \cdot \vec{f} - \int_{\Omega_m} \rho \vec{v} \cdot \vec{g} = 0 \textrm{ } \forall \vec{v} \in \mathcal{C}^1(\bar{\Omega_m})^3, \textrm{ tel que } v_{|\Gamma_S} = 0\\
         \vec{u} = 0 \textrm{ sur } \Gamma_S\\
         u_1 = 0 \textrm{ sur } \Gamma_B
     \end{cases}
@@ -64,5 +64,5 @@ Trouver $\vec{u} \in \mathcal{C}^2(\bar{\Omega_m})^3$ tel que
 Pour prouver l'existence et l'unicité des solutions, nous pourrions utiliser le théorème de Lax-Milgram, après vérification des hypothèses.
 
 Une autre approche du problème non traitée dans ce document serait de se ramener au problème 2D équivalent, ce qui pourrait simplifier et optimiser grandement les simulations,
-tout en fournissant des Approximations satisfaisantes pour la majorité des usages.
+tout en fournissant des approximations satisfaisantes pour la majorité des usages.
 % relire schéma
